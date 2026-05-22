@@ -458,6 +458,7 @@
                         <table class="w-full text-center">
                             <thead>
                                 <tr class="text-emerald-200/20 text-xs uppercase tracking-wider border-b border-white/5 whitespace-nowrap">
+                                    <th class="pb-4 text-center pl-4 w-12">No.</th>
                                     <th class="pb-4 text-left pl-4">Warga / NIK</th>
                                     <th class="pb-4">Gender</th>
                                     <th class="pb-4 text-left">Tempat, Tgl Lahir</th>
@@ -472,6 +473,7 @@
                             <tbody class="text-white/60 text-sm">
                                 @foreach($dataWarga as $warga)
                                 <tr class="border-b border-white/5 hover:bg-white/[0.02]">
+                                    <td class="py-4 text-center font-mono text-xs text-white/40 pl-4 w-12">{{ $loop->iteration }}</td>
                                     <td class="py-4 text-left whitespace-nowrap pl-4">
                                         <div class="flex items-center gap-3">
                                             @if($warga->foto_profil)
@@ -566,7 +568,7 @@
                                         </div>
                                     @endif
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-white text-sm leading-tight">{{ $warga->name }}</span>
+                                        <span class="font-bold text-white text-sm leading-tight">{{ $loop->iteration }}. {{ $warga->name }}</span>
                                         <span class="font-mono text-[10px] text-white/40 tracking-wider mt-0.5">NIK: {{ $warga->nik ?? '-' }}</span>
                                     </div>
                                 </div>
