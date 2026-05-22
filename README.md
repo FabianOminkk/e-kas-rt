@@ -78,9 +78,9 @@ Jalankan Database Seeder untuk mendapatkan akun bawaan berikut guna melakukan pe
 
 | Peran (Role) | Email Login | Password | Akses & Wewenang |
 | :--- | :--- | :--- | :--- |
-| **Ketua RT (Admin)** | `admin@kasrt.id` | `password123` | CRUD Warga, CRUD Mading, Catat Pengeluaran, Laporan Kas, Laporan Cetak, Approval Pembayaran |
-| **Bendahara** | `bendahara@kasrt.id` | `password123` | CRUD Warga, CRUD Mading, Catat Pengeluaran, Laporan Kas, Laporan Cetak, Approval Pembayaran |
-| **Warga** | `warga@kasrt.id` | `password123` | Ubah Profil Mandiri, Kirim Bukti Transfer Iuran, Lihat Dompet & Riwayat Pembayaran Pribadi |
+| **Ketua RT (Admin)** | `admin@kasrt.id` | `123123123` | CRUD Warga, CRUD Mading, Catat Pengeluaran, Laporan Kas, Laporan Cetak, Approval Pembayaran |
+| **Bendahara** | `bendahara@kasrt.id` | `123123123` | CRUD Warga, CRUD Mading, Catat Pengeluaran, Laporan Kas, Laporan Cetak, Approval Pembayaran |
+| **Warga** | `warga@kasrt.id` | `123123123` | Ubah Profil Mandiri, Kirim Bukti Transfer Iuran, Lihat Dompet & Riwayat Pembayaran Pribadi |
 
 ---
 
