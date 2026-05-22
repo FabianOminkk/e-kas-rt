@@ -13,6 +13,7 @@
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-blue?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/MySQL-8.0-orange?style=for-the-badge&logo=mysql" alt="MySQL">
   <img src="https://img.shields.io/badge/Beta-Development-yellow?style=for-the-badge" alt="Beta Status">
+  <img src="https://img.shields.io/badge/Total_Warga-201_Orang-purple?style=for-the-badge&logo=auth0" alt="Total Warga">
 </p>
 
 ---

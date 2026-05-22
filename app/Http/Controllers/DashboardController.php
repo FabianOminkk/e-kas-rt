@@ -215,6 +215,9 @@ class DashboardController extends Controller
                 'role' => 'warga',
             ]);
 
+            // Sync total warga to GitHub README
+            $this->syncTotalWargaToGitHub();
+
             return back()->with('success', 'Warga baru berhasil ditambahkan!');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menambahkan warga: ' . $e->getMessage());
@@ -280,6 +283,9 @@ class DashboardController extends Controller
         }
 
         $warga->delete();
+
+        // Sync total warga to GitHub README
+        $this->syncTotalWargaToGitHub();
         
         return back()->with('success', 'Data warga berhasil dihapus!');
     }
@@ -477,5 +483,45 @@ class DashboardController extends Controller
         Announcement::findOrFail($id)->delete();
         
         return back()->with('success', 'Pengumuman berhasil dihapus dari mading warga!');
+    }
+
+    /**
+     * Sinkronisasi jumlah warga ke README.md dan Push otomatis ke GitHub.
+     */
+    private function syncTotalWargaToGitHub()
+    {
+        try {
+            $count = User::where('role', 'warga')->count();
+            
+            // 1. Update README.md
+            $readmePath = base_path('README.md');
+            if (file_exists($readmePath)) {
+                $content = file_get_contents($readmePath);
+                
+                // Cari badge dan ganti nominalnya
+                // Pola regex: /Total_Warga-\d+_Orang-purple/
+                $pattern = '/Total_Warga-\d+_Orang-purple/';
+                $replacement = 'Total_Warga-' . $count . '_Orang-purple';
+                
+                if (preg_match($pattern, $content)) {
+                    $newContent = preg_replace($pattern, $replacement, $content);
+                    file_put_contents($readmePath, $newContent);
+                }
+            }
+
+            // 2. Jalankan perintah git push di background secara asynchronous
+            $cwd = base_path();
+            $commitMessage = "Auto-update: Total warga is now " . $count;
+            
+            // Menggunakan start /B di Windows agar tidak memblokir respon HTTP
+            $command = 'git add README.md && git commit -m "' . $commitMessage . '" && start /B git push origin main';
+            
+            if (function_exists('exec')) {
+                pclose(popen("cd /d " . escapeshellarg($cwd) . " && " . $command, "r"));
+            }
+        } catch (\Exception $e) {
+            // Log error jika ada masalah, jangan memblokir UX utama
+            logger()->error('Gagal melakukan sinkronisasi Git/GitHub: ' . $e->getMessage());
+        }
     }
 }

@@ -101,6 +101,9 @@
         html.light-mode .text-emerald-400 {
             color: #059669 !important;
         }
+        html.light-mode .text-purple-400 {
+            color: #7c3aed !important;
+        }
         html.light-mode .sidebar-text p.text-white {
             color: #0f172a !important;
         }
@@ -262,7 +265,7 @@
 
                 @if(auth()->user()->role == 'admin' || auth()->user()->role == 'bendahara')
                 {{-- RINGKASAN KAS & LAPORAN --}}
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {{-- CARD PEMASUKAN --}}
                     <div class="glass-card rounded-3xl p-6 border-l-4 border-emerald-500 overflow-hidden shadow-2xl">
                         <div class="flex justify-between items-start mb-4">
@@ -314,6 +317,27 @@
                             <a href="{{ route('laporan.cetak', ['format' => 'doc']) }}" class="flex-1 py-2.5 bg-blue-600 text-white text-[9px] font-black tracking-widest text-center uppercase rounded-xl hover:bg-blue-500 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-blue-600/20">
                                 <i class="fa-solid fa-file-word text-xs"></i> Word
                             </a>
+                        </div>
+                    </div>
+
+                    {{-- CARD TOTAL WARGA --}}
+                    <div class="glass-card rounded-3xl p-6 border-l-4 border-purple-500 overflow-hidden shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/5">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-[10px] text-purple-400/60 font-black uppercase tracking-wider">Total Warga RT</p>
+                                <h3 class="text-2xl font-black text-white mt-1">
+                                    <span id="total-warga-count" data-target="{{ count($dataWarga) }}">0</span> Orang
+                                </h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 shadow-inner">
+                                <i class="fa-solid fa-users text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-[9px] text-white/40 uppercase font-bold tracking-wider">Terdaftar Aktif</p>
+                            <button onclick="toggleModal()" class="text-[9px] font-black text-purple-400 hover:text-purple-300 transition-all uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-user-plus"></i> Tambah
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1219,6 +1243,28 @@
         document.addEventListener('DOMContentLoaded', () => {
             const currentTheme = localStorage.getItem('theme') || 'dark';
             updateToggleButtonUI(currentTheme);
+            
+            // Count-Up Animation for Total Warga
+            const totalWargaElement = document.getElementById('total-warga-count');
+            if (totalWargaElement) {
+                const target = parseInt(totalWargaElement.getAttribute('data-target'), 10) || 0;
+                if (target > 0) {
+                    let current = 0;
+                    const duration = 1000; // 1 second
+                    const stepTime = Math.max(Math.floor(duration / target), 10);
+                    
+                    const timer = setInterval(() => {
+                        current += Math.ceil(target / (duration / stepTime));
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        totalWargaElement.textContent = current;
+                    }, stepTime);
+                } else {
+                    totalWargaElement.textContent = '0';
+                }
+            }
             
             // Wait for charts to initialize before applying theme styles
             setTimeout(() => {
