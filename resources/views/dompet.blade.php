@@ -12,10 +12,63 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.add('light-mode');
+            }
+        })();
+    </script>
+
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: white; margin: 0; overflow-x: hidden; }
-        .glass-sidebar { background: rgba(2, 44, 34, 0.8); backdrop-filter: blur(20px); border-right: 1px solid rgba(16, 185, 129, 0.1); }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); position: relative; z-index: 20; }
+        :root {
+            --bg-primary: #020617;
+            --text-primary: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --glass-sidebar: rgba(2, 44, 34, 0.8);
+            --glass-card: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --sidebar-text-color: rgba(167, 243, 208, 0.5);
+            --hover-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        html.light-mode {
+            --bg-primary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-muted: #64748b;
+            --glass-sidebar: rgba(240, 253, 250, 0.95);
+            --glass-card: #ffffff;
+            --border-color: rgba(226, 232, 240, 0.85);
+            --sidebar-text-color: #047857;
+            --hover-bg: rgba(16, 185, 129, 0.08);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-primary); 
+            color: var(--text-primary); 
+            margin: 0; 
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .glass-sidebar { 
+            background: var(--glass-sidebar); 
+            backdrop-filter: blur(20px); 
+            border-right: 1px solid var(--border-color); 
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .glass-card { 
+            background: var(--glass-card); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid var(--border-color); 
+            position: relative; 
+            z-index: 20; 
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
         .digital-wallet-card { background: linear-gradient(135deg, #10b981 0%, #064e3b 100%); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4); }
         
         .sidebar-container { width: 80px; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 50; }
@@ -27,9 +80,99 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
         ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
         .modal-bg { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); }
+        
+        /* Light Mode Specific Overrides */
+        html.light-mode body {
+            background-color: #f8fafc !important;
+        }
+        html.light-mode main {
+            background-color: #f8fafc !important;
+        }
+        html.light-mode .text-white {
+            color: #0f172a !important;
+        }
+        html.light-mode .bg-\[\#020617\] {
+            background-color: #f8fafc !important;
+        }
+        html.light-mode .bg-slate-900, html.light-mode .bg-slate-950 {
+            background-color: #ffffff !important;
+        }
+        html.light-mode .text-emerald-200\/50 {
+            color: #047857 !important;
+        }
+        html.light-mode .text-emerald-400 {
+            color: #059669 !important;
+        }
+        html.light-mode .sidebar-text p.text-white {
+            color: #0f172a !important;
+        }
+        html.light-mode .sidebar-text p.text-emerald-500 {
+            color: #059669 !important;
+        }
+        html.light-mode .border-white\/5, html.light-mode .border-white\/10 {
+            border-color: rgba(226, 232, 240, 0.8) !important;
+        }
+        html.light-mode .text-white\/40, html.light-mode .text-white\/50, html.light-mode .text-white\/60, html.light-mode .text-emerald-200\/30 {
+            color: #64748b !important;
+        }
+        html.light-mode .text-emerald-200\/80 {
+            color: #047857 !important;
+        }
+        html.light-mode .bg-white\/5 {
+            background-color: rgba(16, 185, 129, 0.08) !important;
+        }
+        html.light-mode .hover\:bg-white\/5:hover {
+            background-color: rgba(16, 185, 129, 0.08) !important;
+        }
+        html.light-mode .hover\:bg-white\/10:hover {
+            background-color: rgba(16, 185, 129, 0.12) !important;
+        }
+        html.light-mode .bg-emerald-500\/10 {
+            background-color: rgba(16, 185, 129, 0.1) !important;
+        }
+        html.light-mode .bg-emerald-500\/20 {
+            background-color: rgba(16, 185, 129, 0.15) !important;
+        }
+        html.light-mode .glass-card {
+            box-shadow: 0 4px 20px -2px rgba(16, 24, 40, 0.05), 0 2px 12px -4px rgba(16, 24, 40, 0.03) !important;
+        }
+        html.light-mode tr.border-b {
+            border-bottom-color: rgba(226, 232, 240, 0.8) !important;
+        }
+        html.light-mode tr:hover {
+            background-color: rgba(16, 185, 129, 0.03) !important;
+        }
+        /* Mobile drawers in light mode */
+        html.light-mode .border-emerald-500\/10 {
+            border-color: rgba(16, 185, 129, 0.2) !important;
+        }
+        html.light-mode .bg-emerald-950\/20 {
+            background-color: rgba(16, 185, 129, 0.05) !important;
+        }
+        html.light-mode .text-slate-400 {
+            color: #475569 !important;
+        }
+        /* Inputs in modals */
+        html.light-mode input, html.light-mode select, html.light-mode textarea {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        html.light-mode input:focus, html.light-mode select:focus, html.light-mode textarea:focus {
+            border-color: #10b981 !important;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2) !important;
+        }
+        html.light-mode .modal-bg {
+            background: rgba(15, 23, 42, 0.6) !important;
+            backdrop-filter: blur(8px) !important;
+        }
+        html.light-mode .bg-slate-900\/90 {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(226, 232, 240, 0.8) !important;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -81,6 +224,12 @@
                     </div>
                 </div>
                 
+                {{-- THEME TOGGLE BUTTON --}}
+                <button type="button" onclick="toggleTheme()" class="theme-toggle-btn w-full flex items-center gap-4 px-3 py-3 mb-3 bg-white/5 border border-white/10 text-emerald-400 rounded-xl hover:bg-emerald-500 hover:text-white transition-all shadow-lg">
+                    <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-moon theme-toggle-icon"></i></div>
+                    <span class="sidebar-text text-[10px] font-black uppercase tracking-widest theme-toggle-text">Mode Gelap</span>
+                </button>
+
                 <button type="button" onclick="confirmLogout(event)" class="w-full flex items-center gap-4 px-3 py-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl hover:bg-red-500 hover:text-white transition-all">
                     <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-right-from-bracket"></i></div>
                     <span class="sidebar-text text-[10px] font-black uppercase tracking-widest">Logout</span>
@@ -288,6 +437,9 @@
     {{-- SCRIPTS --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            updateToggleButtonUI(currentTheme);
+
             @if(session('success'))
                 Swal.fire({ icon: 'success', title: '<span class="text-white font-black uppercase italic">BERHASIL!</span>', text: {!! json_encode(session('success')) !!}, background: '#020617', confirmButtonColor: '#10b981', customClass: { popup: 'glass-card border border-emerald-500/30 rounded-3xl', confirmButton: 'rounded-xl font-black uppercase text-[10px] px-8 py-3 text-[#020617]' } });
             @endif
@@ -295,6 +447,44 @@
                 Swal.fire({ icon: 'error', title: '<span class="text-white font-black uppercase italic">GAGAL!</span>', text: {!! json_encode(session('error')) !!}, background: '#020617', confirmButtonColor: '#ef4444', customClass: { popup: 'glass-card border border-red-500/30 rounded-3xl', confirmButton: 'rounded-xl font-black uppercase text-[10px] px-8 py-3' } });
             @endif
         });
+
+        // TOGGLE THEME LOGIC
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isLight = html.classList.toggle('light-mode');
+            const newTheme = isLight ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            
+            updateToggleButtonUI(newTheme);
+        }
+
+        function updateToggleButtonUI(theme) {
+            const icons = document.querySelectorAll('.theme-toggle-icon');
+            const texts = document.querySelectorAll('.theme-toggle-text');
+            const btns = document.querySelectorAll('.theme-toggle-btn');
+            
+            icons.forEach(icon => {
+                if (theme === 'light') {
+                    icon.className = 'fa-solid fa-sun text-amber-500 theme-toggle-icon';
+                } else {
+                    icon.className = 'fa-solid fa-moon text-emerald-400 theme-toggle-icon';
+                }
+            });
+            
+            texts.forEach(text => {
+                text.textContent = theme === 'light' ? 'Mode Terang' : 'Mode Gelap';
+            });
+            
+            btns.forEach(btn => {
+                if (theme === 'light') {
+                    btn.classList.add('bg-amber-500/10', 'border-amber-500/30', 'text-amber-500');
+                    btn.classList.remove('bg-white/5', 'border-white/10', 'text-emerald-400');
+                } else {
+                    btn.classList.remove('bg-amber-500/10', 'border-amber-500/30', 'text-amber-500');
+                    btn.classList.add('bg-white/5', 'border-white/10', 'text-emerald-400');
+                }
+            });
+        }
 
         function bukaModalBayar() { const modal = document.getElementById('modalBayar'); modal.classList.remove('hidden'); modal.classList.add('flex'); }
         function tutupModalBayar() { const modal = document.getElementById('modalBayar'); modal.classList.add('hidden'); modal.classList.remove('flex'); }
