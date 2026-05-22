@@ -30,7 +30,7 @@ Menampilkan total pemasukan, pengeluaran, saldo kas, serta grafik arus kas bulan
 ### 2. Database Warga Terperinci (Tampilan Desktop)
 Pencatatan data identitas warga secara menyeluruh dengan kolom terstruktur rapi tanpa scroll menyamping.
 <p align="center">
-  <img src="screenshots/database-warga.png" width="100%" alt="Database Warga RT">
+  <img src="screenshots/databasewarga.png" width="100%" alt="Database Warga RT">
 </p>
 
 ### 3. Pengaturan Profil Mandiri
