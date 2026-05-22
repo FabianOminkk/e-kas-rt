@@ -117,14 +117,14 @@ Salin file konfigurasi contoh dan buat key aplikasi:
 cp .env.example .env
 php artisan key:generate
 ```
-Buka berkas `.env` yang baru dibuat di editor Anda, lalu sesuaikan koneksi database Anda:
+Buka berkas `.env` yang baru dibuat di editor Anda, lalu sesuaikan koneksi database Anda (berikut adalah konfigurasi standar jika Anda menggunakan Laragon & HeidiSQL):
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=nama_database_anda
-DB_USERNAME=username_database_anda
-DB_PASSWORD=password_database_anda
+DB_DATABASE=kas_rt
+DB_USERNAME=root
+DB_PASSWORD=
 ```
 
 ### Langkah 4: Migrasi & Seeding Database
