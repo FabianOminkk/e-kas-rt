@@ -1,4 +1,4 @@
-# 🟢 E-KAS RT - Sistem Pengelolaan Kas Rukun Tetangga Premium (Beta)
+# 🟢 E-KAS RT - Sistem Pengelolaan Kas RT (Beta)
 
 <p align="center">
   <img src="public/images/abikun.png" width="120" height="120" style="border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);" alt="Logo E-KAS RT">
