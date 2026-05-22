@@ -56,7 +56,7 @@ Panel terpusat untuk memposting pengumuman warga di mading informasi RT dan memv
     *   **Sentuhan Mobile (Tap)**: Mengetuk kartu warga membuka detail secara eksklusif dan otomatis menutup laci warga lainnya.
 *   💬 **Widget Layanan Pelanggan WhatsApp (Beta Widget)**: Tombol WhatsApp terapung berdenyut di pojok bawah kanan yang menampilkan popover masukan/kritik/kendala fase Beta, dan langsung menghubungkan pengguna ke WhatsApp Admin dengan pesan otomatis.
 *   📄 **Ekspor Laporan Cepat**: Cetak laporan rekap kas bulanan secara instan dalam format **PDF** dan **Microsoft Word**.
-*   📢 **Mading Informasi RT**: Papan pengumuman warga interaktif yang dapat dikelola secara CRUD oleh admin/bendahara untuk mempublikasikan agenda RT (e.g., Kerja Bakti).
+*   📢 **Mading Informasi RT**: Papan pengumuman warga interaktif yang dapat dikelola secara CRUD oleh admin/bendahara untuk mempublikasikan agenda RT (Lomba dan Kerja Bakti).
 *   🔒 **Multi-Role Authentication**: Mendukung tiga peran pengguna dengan hak akses terproteksi: **Ketua RT (Admin)**, **Bendahara**, dan **Warga**.
 *   🔔 **Sistem Validasi Pembayaran**: Warga dapat mengunggah bukti transfer, dan Admin/Bendahara memiliki wewenang untuk menyetujui (*Approve*) atau menolak (*Reject*) pembayaran tersebut.
 
@@ -93,7 +93,7 @@ Pastikan Anda sudah menginstal:
 *   PHP >= 8.1
 *   Composer
 *   Node.js & NPM
-*   MySQL Server (e.g., via Laragon, XAMPP, atau MySQL native)
+*   MySQL Server (via Laragon, XAMPP, atau MySQL native)
 
 ### Langkah 1: Kloning & Masuk ke Proyek
 ```bash
@@ -163,4 +163,4 @@ Buka tautan [http://127.0.0.1:8000](http://127.0.0.1:8000) di browser Anda untuk
 ---
 
 ## 📝 Catatan Tambahan (Pengembangan Beta)
-Aplikasi saat ini dilengkapi dengan widget **Layanan Pelanggan WhatsApp (Beta)** di sudut bawah halaman. Nomor tujuan admin default diatur ke `082345678923`. Anda dapat mengubah nomor whatsapp admin sesungguhnya di bagian paling bawah berkas `resources/views/dashboard.blade.php` pada baris tautan `https://wa.me/6282345678923`.
+Aplikasi saat ini dilengkapi dengan widget **Layanan Pelanggan WhatsApp (Beta)** di sudut bawah halaman. Nomor tujuan admin default diatur ke `0812345678`. Anda dapat mengubah nomor whatsapp admin sesungguhnya di bagian paling bawah berkas `resources/views/dashboard.blade.php` pada baris tautan `https://wa.me/62812345678`.
