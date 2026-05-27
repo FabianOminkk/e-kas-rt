@@ -51,17 +51,18 @@ class DashboardController extends Controller
                 ->with(['iurans' => function($query) use ($bulanSekarang, $tahunSekarang) {
                     $query->where('bulan', $bulanSekarang)->where('tahun', $tahunSekarang);
                 }])
-                // Left Join untuk keperluan sorting
-                ->leftJoin('iurans', function($join) use ($bulanSekarang, $tahunSekarang) {
-                    $join->on('users.id', '=', 'iurans.user_id')
-                         ->where('iurans.bulan', '=', $bulanSekarang)
-                         ->where('iurans.tahun', '=', $tahunSekarang);
-                })
-                ->select('users.*') // Pastikan hanya data User yang diambil, bukan data campuran join
+                // Subquery untuk mengambil status iuran bulan ini untuk keperluan sorting (mencegah duplikasi join)
+                ->addSelect([
+                    'iuran_status' => Iuran::select('status')
+                        ->whereColumn('user_id', 'users.id')
+                        ->where('bulan', $bulanSekarang)
+                        ->where('tahun', $tahunSekarang)
+                        ->limit(1)
+                ])
                 ->orderByRaw("
                     CASE 
-                        WHEN iurans.status = 'lunas' THEN 1 
-                        WHEN iurans.status = 'menunggu' THEN 2 
+                        WHEN iuran_status = 'lunas' THEN 1 
+                        WHEN iuran_status = 'menunggu' THEN 2 
                         ELSE 3 
                     END ASC
                 ")
@@ -300,6 +301,18 @@ class DashboardController extends Controller
             'nominal' => 'required|numeric',
             'bukti_transfer' => 'required|file|image|max:2048', 
         ]);
+
+        // Cegah warga membayar dua kali untuk bulan yang sama jika berstatus lunas atau menunggu
+        $existing = Iuran::where('user_id', Auth::id())
+            ->where('bulan', $request->bulan)
+            ->where('tahun', now()->year)
+            ->whereIn('status', ['lunas', 'menunggu'])
+            ->first();
+
+        if ($existing) {
+            $statusText = $existing->status === 'lunas' ? 'LUNAS' : 'MENUNGGU PERSETUJUAN';
+            return back()->with('error', "Pembayaran untuk bulan ini sudah ada dan berstatus: {$statusText}!");
+        }
 
         $path = $request->file('bukti_transfer')->store('bukti_kas', 'public');
 
