@@ -515,6 +515,7 @@
             cropModal.classList.add('hidden');
             cropModal.classList.remove('flex');
             if (cropper) { cropper.destroy(); }
+        }
         // ====================================================
 
         // TOGGLE THEME LOGIC
