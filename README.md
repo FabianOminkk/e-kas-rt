@@ -63,6 +63,82 @@ Panel terpusat untuk memposting pengumuman warga di mading informasi RT dan memv
 
 ---
 
+## 🗺️ Blueprint & Alur Pembayaran Kas RT (POV Warga)
+
+Bagian ini memaparkan alur lengkap bagaimana seorang **Warga** memantau status keuangannya, melakukan transfer, hingga mengonfirmasi pembayaran kas ke sistem **E-KAS RT** untuk kemudian divalidasi oleh pengurus RT.
+
+### 👤 Sudut Pandang (POV) Warga
+
+1. **Memantau Dompet Digital Mandiri (`/dompet`)**:
+   Warga masuk ke sistem menggunakan akun mereka dan disuguhi halaman **"Dompet Saya"**. Di sini, warga dapat melihat visualisasi dinamis berupa kartu-kartu status iuran bulanan mereka di tahun berjalan. Tiap bulan diwakili oleh indikator warna yang mencerminkan status pembayaran:
+   *   🔴 **Belum Bayar**: Terdapat tombol aksi untuk mengunggah bukti transfer iuran.
+   *   🟡 **Menunggu**: Menandakan bukti pembayaran telah terunggah dan sedang dalam proses peninjauan oleh Admin/Bendahara.
+   *   🟢 **Lunas**: Pembayaran terverifikasi dan secara otomatis menyinkronkan saldo kas RT.
+
+2. **Prosedur Pembayaran Mandiri**:
+   *   Warga melakukan transfer dana kas RT secara manual ke rekening pengurus RT yang disepakati (di luar aplikasi).
+   *   Warga kembali ke aplikasi, membuka menu **"Dompet Saya"**, lalu mengeklik tombol bayar pada bulan yang tertunggak.
+   *   Mengisi form konfirmasi dengan memasukkan nominal transfer dan mengunggah foto/dokumen digital **Bukti Transfer** (`bukti_transfer`).
+   *   Sistem memberikan feedback instan berupa notifikasi sukses *SweetAlert2* bahwa bukti pembayaran telah terkirim dan status iuran bulan bersangkutan berubah menjadi **Menunggu**.
+
+3. **Menerima Keputusan Pengurus**:
+   *   Warga tidak perlu melakukan apa-apa lagi selain memantau halaman dompet mereka.
+   *   Jika disetujui (Approved), status iuran bulan tersebut secara otomatis berubah menjadi **Lunas** (hijau emerald).
+   *   Jika ditolak (Rejected) karena bukti tidak valid atau nominal tidak sesuai, status iuran akan kembali menjadi **Belum Bayar** (merah) sehingga warga dapat mengunggah ulang bukti transfer yang benar.
+
+---
+
+### 📊 Diagram Sequence Blueprint (Mermaid.js)
+
+Berikut adalah diagram arsitektur interaksi sistem dari awal pembayaran oleh warga hingga persetujuan oleh Admin/Bendahara:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor W as Warga (Citizen)
+    participant APP as Sistem E-KAS RT (Web App)
+    participant DB as Database (MySQL)
+    actor A as Admin / Bendahara (Treasurer)
+
+    Note over W: 1. Cek Tagihan & Transfer
+    W->>APP: Login & Buka Menu "Dompet Saya"
+    APP-->>W: Tampilan Status Iuran Bulanan (🔴 Belum Bayar)
+    W->>W: Transfer Iuran secara Mandiri via Bank / E-Wallet
+
+    Note over W: 2. Unggah Bukti Transaksi
+    W->>APP: Form Pembayaran: Pilih Bulan, Isi Nominal, & Unggah Bukti Transfer
+    APP->>DB: Query Simpan Transaksi (Status: 'menunggu')
+    DB-->>APP: Sukses Menyimpan Data
+    APP-->>W: SweetAlert "Bukti berhasil diupload! Menunggu persetujuan."
+    Note over W: Status Berubah menjadi: 🟡 Menunggu
+
+    Note over A: 3. Tinjauan & Validasi Pengurus
+    A->>APP: Buka Dashboard Admin / Bendahara
+    APP->>DB: Tarik Transaksi Status 'menunggu'
+    DB-->>APP: Daftar Bukti Pembayaran Warga
+    APP-->>A: Panel "Persetujuan Kas" (Tinjau Bukti Foto)
+    
+    alt Bukti Pembayaran Valid & Sesuai
+        A->>APP: Klik "Setujui" (Approve)
+        APP->>DB: Update Status -> 'lunas' & Tambah Saldo Kas RT
+        DB-->>APP: Data Terbarui
+        APP-->>A: SweetAlert "Pembayaran disetujui! Kas RT bertambah."
+    else Bukti Pembayaran Tidak Valid / Salah Nominal
+        A->>APP: Klik "Tolak" (Reject)
+        APP->>DB: Update Status -> 'belum_bayar'
+        DB-->>APP: Data Terbarui
+        APP-->>A: SweetAlert "Pembayaran ditolak."
+    end
+
+    Note over W: 4. Hasil Verifikasi Real-Time
+    W->>APP: Refresh Menu "Dompet Saya"
+    APP->>DB: Ambil Status Iuran Terkini
+    DB-->>APP: Data Status Iuran ('lunas' / 'belum_bayar')
+    APP-->>W: Tampilan Status Iuran Berubah (🟢 Lunas / 🔴 Belum Bayar)
+```
+
+---
+
 ## 🛠️ Teknologi yang Digunakan
 
 *   **Framework Utama**: [Laravel 10.x (PHP 8.x)](https://laravel.com)
