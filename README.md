@@ -88,6 +88,24 @@ Bagian ini memaparkan alur lengkap bagaimana seorang **Warga** memantau status k
 
 ---
 
+### 📷 Visualisasi Fitur & Alur Pembayaran Warga
+
+Berikut adalah tampilan antarmuka premium dari sudut pandang warga saat melakukan pembayaran kas RT:
+
+#### A. Halaman Dompet Saya (Warga View)
+Menampilkan rangkuman total kontribusi, grafik kemajuan iuran tahunan, serta tabel riwayat transaksi kas pribadi secara terstruktur.
+<p align="center">
+  <img src="screenshots/dompet-warga.png" width="100%" alt="Halaman Dompet Warga">
+</p>
+
+#### B. Modal Pembayaran Kas (Metode QRIS & Bank Transfer)
+Popup interaktif yang menampilkan nomor rekening tujuan transfer RT, integrasi QRIS, form pemilihan bulan kas, input nominal, dan unggah berkas bukti transfer.
+<p align="center">
+  <img src="screenshots/bayar-kas-modal.png" width="60%" style="border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);" alt="Modal Pembayaran Kas Warga">
+</p>
+
+---
+
 ### 📊 Diagram Sequence Blueprint (Mermaid.js)
 
 Berikut adalah diagram arsitektur interaksi sistem dari awal pembayaran oleh warga hingga persetujuan oleh Admin/Bendahara:
