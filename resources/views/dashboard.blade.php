@@ -86,7 +86,10 @@
         html.light-mode main {
             background-color: #f8fafc !important;
         }
-        html.light-mode .text-white {
+        html.light-mode .text-white,
+        html.light-mode .text-white\/90,
+        html.light-mode .text-white\/80,
+        html.light-mode .text-white\/70 {
             color: #0f172a !important;
         }
         html.light-mode .bg-\[\#020617\] {
@@ -113,7 +116,15 @@
         html.light-mode .border-white\/5, html.light-mode .border-white\/10 {
             border-color: rgba(226, 232, 240, 0.8) !important;
         }
-        html.light-mode .text-white\/40, html.light-mode .text-white\/50, html.light-mode .text-white\/60, html.light-mode .text-emerald-200\/30 {
+        html.light-mode .text-white\/40,
+        html.light-mode .text-white\/50,
+        html.light-mode .text-white\/60,
+        html.light-mode .text-white\/30,
+        html.light-mode .text-emerald-200\/20,
+        html.light-mode .text-emerald-200\/30,
+        html.light-mode .text-emerald-200\/50,
+        html.light-mode .text-emerald-100\/70,
+        html.light-mode .text-emerald-100\/50 {
             color: #64748b !important;
         }
         html.light-mode .text-emerald-200\/80 {
