@@ -388,7 +388,7 @@
         <div class="glass-card w-full max-w-md rounded-[2.5rem] p-8 border border-emerald-500/30 max-h-full overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-emerald-400 font-black text-xl uppercase italic tracking-tighter">Pembayaran Kas</h3>
-                <button onclick="tutupModalBayar()" class="text-white/20 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="tutupModalBayar()" class="text-white/40 hover:text-red-500 transition-colors text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div class="mb-6 space-y-3">
