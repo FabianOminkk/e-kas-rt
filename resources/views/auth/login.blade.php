@@ -89,7 +89,9 @@
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
-            animation: tv-glitch-shake 3s infinite steps(1);
+            opacity: 0;
+            animation: tv-logo-init 4.5s cubic-bezier(0.15, 0.85, 0.35, 1) forwards,
+                       tv-glitch-subtle 5s infinite 4.5s;
         }
         .tv-static-overlay {
             position: absolute;
@@ -216,46 +218,67 @@
             90% { transform: translate(-1%, 2%) scale(1.2); }
             100% { transform: translate(0,0) scale(1.1); }
         }
-        @keyframes tv-glitch-shake {
-            0%, 100% {
-                transform: translate(0, 0) skew(0deg);
-                filter: brightness(1) contrast(1) hue-rotate(0deg);
-            }
-            10% {
-                transform: translate(-1px, 1px) skew(-2deg);
-                filter: brightness(1.2) contrast(1.1) hue-rotate(90deg);
+        @keyframes tv-logo-init {
+            0% {
+                opacity: 0;
+                transform: scaleY(0.01) scaleX(0);
+                filter: invert(1) hue-rotate(180deg) brightness(2) contrast(2);
             }
             11% {
-                transform: translate(0, 0) skew(0deg);
-                filter: brightness(1) contrast(1) hue-rotate(0deg);
+                opacity: 0;
+                transform: scaleY(0.01) scaleX(0);
+                filter: invert(1) hue-rotate(180deg) brightness(2) contrast(2);
+            }
+            /* Pop open right when the TV beam expands */
+            12% {
+                opacity: 1;
+                transform: scale(1.35) skew(8deg);
+                filter: invert(1) hue-rotate(180deg) brightness(2) contrast(2);
+            }
+            20% {
+                opacity: 1;
+                transform: scale(0.92) translate(-3px, 2px) skew(-5deg);
+                filter: invert(0.85) hue-rotate(120deg) brightness(1.4) contrast(1.7);
+            }
+            32% {
+                opacity: 1;
+                transform: scale(1.06) translate(2px, -1px) skew(3deg);
+                filter: invert(0.65) hue-rotate(80deg) brightness(1.2) contrast(1.4);
             }
             45% {
-                transform: translate(0, 0) skew(0deg);
-                filter: brightness(1) contrast(1) hue-rotate(0deg);
+                opacity: 1;
+                transform: scale(0.97) skew(-2deg);
+                filter: invert(0.4) hue-rotate(40deg) brightness(1.1) contrast(1.2);
             }
-            46% {
-                transform: translate(2px, -1px) skew(3deg);
-                filter: brightness(1.5) contrast(1.3) hue-rotate(-90deg) saturate(1.5);
+            60% {
+                opacity: 1;
+                transform: scale(1.02) skew(1deg);
+                filter: invert(0.18) hue-rotate(15deg) brightness(1) contrast(1.1);
             }
-            47% {
-                transform: translate(-3px, 2px) skew(-5deg) scaleY(1.05);
-                filter: brightness(0.7) contrast(1.5) invert(1) hue-rotate(180deg);
+            80% {
+                opacity: 1;
+                transform: scale(1) skew(0deg);
+                filter: invert(0.05) hue-rotate(5deg) brightness(1) contrast(1);
             }
-            48% {
-                transform: translate(0, 0) skew(0deg);
-                filter: brightness(1) contrast(1) hue-rotate(0deg);
+            100% {
+                opacity: 1;
+                transform: scale(1) skew(0deg);
+                filter: invert(0) hue-rotate(0deg) brightness(1) contrast(1);
             }
-            82% {
-                transform: translate(0, 0) skew(0deg);
-                filter: brightness(1) contrast(1) hue-rotate(0deg);
+        }
+
+        @keyframes tv-glitch-subtle {
+            0%, 92%, 96%, 100% {
+                transform: translate(0, 0) skew(0deg) scale(1);
+                filter: brightness(1) contrast(1) hue-rotate(0deg) invert(0);
             }
-            83% {
-                transform: translate(-2px, -2px) skew(1deg);
-                filter: brightness(1.3) contrast(1.2) sepia(1) hue-rotate(45deg);
+            94% {
+                transform: translate(-1.5px, 0.8px) skew(-2deg) scale(1.03);
+                filter: brightness(1.2) contrast(1.15) hue-rotate(180deg) invert(0.9);
             }
-            84% {
-                transform: translate(0, 0) skew(0deg);
-                filter: brightness(1) contrast(1) hue-rotate(0deg);
+            98% {
+                transform: translate(1.5px, -0.8px) skew(1.5deg) scale(0.97);
+                filter: brightness(0.85) contrast(1.2) hue-rotate(-15deg) invert(0.05);
             }
         }
     
