@@ -8,15 +8,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            /* Default CRT Parameters - completely adjustable in real-time! */
-            --tv-static-opacity: 0.35;
-            --tv-scanline-opacity: 0.45;
-            --tv-glitch-displacement: 3px;
-            --tv-glitch-skew: 4deg;
-            --tv-phosphor-glow: 20px;
-        }
-
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #022c22; }
 
         .cyber-bg {
@@ -86,208 +77,159 @@
     
         
     
-        /* --- TV Glitch & Static Runyek-Runyek Effect --- */
-        .tv-glitch-container {
+        /* --- Neon Broken Lamp Short-Circuit Effect --- */
+        .neon-lamp-container {
             position: relative;
             background: #022c22;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
             border: 1.5px solid rgba(52, 211, 153, 0.4);
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+            animation: neon-glow-flicker 8s infinite linear;
         }
-        .tv-logo {
+        .neon-logo-img {
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
-            opacity: 0;
-            animation: tv-logo-init 4.5s cubic-bezier(0.15, 0.85, 0.35, 1) forwards,
-                       tv-glitch-subtle 5s infinite 4.5s;
-        }
-        .tv-static-overlay {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.18;
-            background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23noiseFilter)'/></svg>");
-            animation: tv-static-noise 0.1s steps(4) infinite;
-            mix-blend-mode: color-dodge;
-        }
-        .tv-scanlines {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background: linear-gradient(
-                rgba(18, 16, 16, 0) 40%, 
-                rgba(0, 0, 0, 0.35) 60%
-            );
-            background-size: 100% 3px;
-            z-index: 2;
-            opacity: var(--tv-scanline-opacity);
+            animation: neon-logo-flicker 8s infinite linear;
         }
 
-        /* --- CRT TV Turn-On Power Effect --- */
-        .tv-turn-on-overlay {
-            position: absolute;
-            inset: 0;
-            background: #000000;
-            z-index: 10;
-            pointer-events: none;
-            animation: tv-screen-on 1.6s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
-        }
-
-        .tv-turn-on-overlay::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: #ffffff;
-            box-shadow: 0 0 12px 2px #ffffff, 0 0 20px 4px #10b981;
-            transform: scaleX(0);
-            transform-origin: center;
-            opacity: 0;
-            animation: tv-beam-on 1.6s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
-        }
-
-        @keyframes tv-screen-on {
-            0% {
-                background: #000000;
+        @keyframes neon-logo-flicker {
+            /* 0% - 15%: Stable normal */
+            0%, 15% {
+                opacity: 1;
+                filter: brightness(1) drop-shadow(0 0 5px rgba(52, 211, 153, 0.5));
+            }
+            /* 15.1%: Sudden drop to black (starts from dark) */
+            15.1% {
+                opacity: 0.05;
+                filter: brightness(0.1) drop-shadow(0 0 0px transparent);
+            }
+            /* 15.3%: Blinding instant flash (instantly bright) */
+            15.3% {
+                opacity: 1;
+                filter: brightness(2) drop-shadow(0 0 15px rgba(52, 211, 153, 0.9));
+            }
+            /* 15.5%: Return to normal */
+            15.5% {
+                opacity: 1;
+                filter: brightness(1) drop-shadow(0 0 5px rgba(52, 211, 153, 0.5));
+            }
+            /* 15.6% - 30%: Stable normal */
+            15.6%, 30% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+            /* 30.1% - 34%: Hum/buzz at dim (starts from dim) */
+            30.1% {
+                opacity: 0.65;
+                filter: brightness(0.6) drop-shadow(0 0 2px rgba(52, 211, 153, 0.2));
+            }
+            34% {
+                opacity: 0.75;
+                filter: brightness(0.7) drop-shadow(0 0 3px rgba(52, 211, 153, 0.3));
+            }
+            /* 34.1%: Snap off */
+            34.1% {
+                opacity: 0.02;
+                filter: brightness(0.05);
+            }
+            /* 34.3%: Snap on bright */
+            34.3% {
+                opacity: 0.95;
+                filter: brightness(1.6);
+            }
+            /* 34.5%: Snap off */
+            34.5% {
+                opacity: 0.08;
+                filter: brightness(0.1);
+            }
+            /* 34.7%: Snap normal */
+            34.7% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+            /* 34.8% - 55%: Stable normal */
+            34.8%, 55% {
                 opacity: 1;
             }
-            30% {
-                background: #000000;
-                opacity: 1;
+            /* 55.1%: Instantly dark */
+            55.1% {
+                opacity: 0.1;
+                filter: brightness(0.15);
             }
-            /* TV screen flash open */
-            35% {
-                background: #ffffff;
-                opacity: 1;
-            }
-            40% {
-                background: #10b981;
-                filter: brightness(2) contrast(1.5);
-                opacity: 1;
-            }
-            60% {
-                background: rgba(16, 185, 129, 0.2);
-                opacity: 1;
-            }
-            100% {
-                background: transparent;
-                opacity: 0;
-                visibility: hidden;
-            }
-        }
-
-        @keyframes tv-beam-on {
-            0% {
-                transform: translateY(-50%) scaleX(0) scaleY(1);
-                opacity: 0;
-            }
-            5% {
-                transform: translateY(-50%) scaleX(0.01) scaleY(1);
-                opacity: 1;
-            }
-            /* The horizontal beam shoots across */
-            25% {
-                transform: translateY(-50%) scaleX(1) scaleY(1);
-                opacity: 1;
-            }
-            /* The beam pops open vertically */
-            30% {
-                transform: translateY(-50%) scaleX(1) scaleY(12);
-                opacity: 1;
-                background: #ffffff;
-            }
-            /* Fades and vanishes into the main screen flash */
-            35% {
-                transform: translateY(-50%) scaleX(1) scaleY(30);
+            /* 55.5%: Slowly recover from dark to normal */
+            58% {
                 opacity: 0.8;
+                filter: brightness(0.8);
             }
-            40% {
-                transform: translateY(-50%) scaleX(1) scaleY(0);
-                opacity: 0;
-            }
-            100% {
-                transform: translateY(-50%) scaleX(1) scaleY(0);
-                opacity: 0;
-            }
-        }
-
-        @keyframes tv-static-noise {
-            0% { transform: translate(0,0) scale(1); }
-            10% { transform: translate(-1%, -1%) scale(1.1); }
-            20% { transform: translate(1%, 2%) scale(1); }
-            30% { transform: translate(-2%, -2%) scale(1.2); }
-            40% { transform: translate(1%, 3%) scale(1.1); }
-            50% { transform: translate(-1%, 1%) scale(1); }
-            60% { transform: translate(2%, -1%) scale(1.2); }
-            70% { transform: translate(-2%, 2%) scale(1.1); }
-            80% { transform: translate(1%, -3%) scale(1); }
-            90% { transform: translate(-1%, 2%) scale(1.2); }
-            100% { transform: translate(0,0) scale(1.1); }
-        }
-        @keyframes tv-logo-init {
-            0% {
-                opacity: 0;
-                transform: scaleY(0.01) scaleX(0);
-                filter: invert(1) hue-rotate(180deg) brightness(2) contrast(2);
-            }
-            11% {
-                opacity: 0;
-                transform: scaleY(0.01) scaleX(0);
-                filter: invert(1) hue-rotate(180deg) brightness(2) contrast(2);
-            }
-            /* Pop open right when the TV beam expands */
-            12% {
+            58.1% {
                 opacity: 1;
-                transform: scale(1.35) skew(8deg);
-                filter: invert(1) hue-rotate(180deg) brightness(2) contrast(2);
+                filter: brightness(1);
             }
-            20% {
+            /* 58.2% - 75%: Stable normal */
+            58.2%, 75% {
                 opacity: 1;
-                transform: scale(0.92) translate(-3px, 2px) skew(-5deg);
-                filter: invert(0.85) hue-rotate(120deg) brightness(1.4) contrast(1.7);
             }
-            32% {
-                opacity: 1;
-                transform: scale(1.06) translate(2px, -1px) skew(3deg);
-                filter: invert(0.65) hue-rotate(80deg) brightness(1.2) contrast(1.4);
-            }
-            45% {
-                opacity: 1;
-                transform: scale(0.97) skew(-2deg);
-                filter: invert(0.4) hue-rotate(40deg) brightness(1.1) contrast(1.2);
-            }
-            60% {
-                opacity: 1;
-                transform: scale(1.02) skew(1deg);
-                filter: invert(0.18) hue-rotate(15deg) brightness(1) contrast(1.1);
+            /* 75.1% - 80%: Dim humming (stays dim for a bit) */
+            75.1% {
+                opacity: 0.55;
+                filter: brightness(0.5) drop-shadow(0 0 1px rgba(52, 211, 153, 0.1));
             }
             80% {
-                opacity: 1;
-                transform: scale(1) skew(0deg);
-                filter: invert(0.05) hue-rotate(5deg) brightness(1) contrast(1);
+                opacity: 0.65;
+                filter: brightness(0.6) drop-shadow(0 0 2px rgba(52, 211, 153, 0.2));
             }
-            100% {
+            /* 80.1%: Spark/Flash instantly bright */
+            80.1% {
                 opacity: 1;
-                transform: scale(1) skew(0deg);
-                filter: invert(0) hue-rotate(0deg) brightness(1) contrast(1);
+                filter: brightness(1.8) drop-shadow(0 0 12px rgba(52, 211, 153, 0.8));
+            }
+            80.3% {
+                opacity: 0.4;
+                filter: brightness(0.4);
+            }
+            80.5% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+            /* 80.6% - 92%: Stable normal */
+            80.6%, 92% {
+                opacity: 1;
+            }
+            /* 92.1% - 92.6%: Ultra fast rapid firing flickers */
+            92.1% { opacity: 0.1; }
+            92.2% { opacity: 0.9; }
+            92.3% { opacity: 0.05; }
+            92.4% { opacity: 0.95; }
+            92.5% { opacity: 0.15; }
+            92.6% { opacity: 1; }
+            /* 92.7% - 100%: Stable normal */
+            92.7%, 100% {
+                opacity: 1;
+                filter: brightness(1);
             }
         }
 
-        @keyframes tv-glitch-subtle {
-            0%, 92%, 96%, 100% {
-                transform: translate(0, 0) skew(0deg) scale(1);
-                filter: brightness(1) contrast(1) hue-rotate(0deg) invert(0);
+        @keyframes neon-glow-flicker {
+            0%, 15%, 15.5%, 30%, 34.7%, 55%, 58.1%, 75%, 80.5%, 92%, 92.6%, 100% {
+                box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+                border-color: rgba(52, 211, 153, 0.4);
             }
-            94% {
-                transform: translate(-1.5px, 0.8px) skew(-2deg) scale(1.03);
-                filter: brightness(1.2) contrast(1.15) hue-rotate(180deg) invert(0.9);
+            15.1%, 34.1%, 34.5%, 55.1%, 92.1%, 92.3%, 92.5% {
+                box-shadow: 0 0 2px rgba(52, 211, 153, 0.05);
+                border-color: rgba(52, 211, 153, 0.15);
             }
-            98% {
-                transform: translate(1.5px, -0.8px) skew(1.5deg) scale(0.97);
-                filter: brightness(0.85) contrast(1.2) hue-rotate(-15deg) invert(0.05);
+            15.3%, 34.3%, 80.1% {
+                box-shadow: 0 0 35px rgba(52, 211, 153, 0.8);
+                border-color: rgba(52, 211, 153, 0.8);
+            }
+            30.1%, 34%, 75.1%, 80% {
+                box-shadow: 0 0 8px rgba(52, 211, 153, 0.2);
+                border-color: rgba(52, 211, 153, 0.25);
+            }
+            58% {
+                box-shadow: 0 0 12px rgba(52, 211, 153, 0.3);
+                border-color: rgba(52, 211, 153, 0.35);
             }
         }
     
@@ -310,59 +252,6 @@
                     dollar.style.animationDelay = Math.random() * 8 + 's';
                     dollar.style.fontSize = (Math.random() * 10 + 20) + 'px';
                     container.appendChild(dollar);
-                }
-
-                // --- Interactive CRT Real-Time Adjustment System ---
-                const trigger = document.getElementById('crt-control-trigger');
-                const panel = document.getElementById('crt-control-panel');
-                
-                if (trigger && panel) {
-                    trigger.addEventListener('click', () => {
-                        panel.classList.toggle('hidden');
-                        trigger.classList.toggle('bg-emerald-500/20');
-                    });
-                    
-                    const staticRange = document.getElementById('static-range');
-                    const staticVal = document.getElementById('static-val');
-                    const scanlineRange = document.getElementById('scanline-range');
-                    const scanlineVal = document.getElementById('scanline-val');
-                    const jitterRange = document.getElementById('jitter-range');
-                    const jitterVal = document.getElementById('jitter-val');
-                    
-                    // Initialize or load from localStorage
-                    if (localStorage.getItem('crt-static') !== null) {
-                        staticRange.value = localStorage.getItem('crt-static');
-                        scanlineRange.value = localStorage.getItem('crt-scanlines');
-                        jitterRange.value = localStorage.getItem('crt-jitter');
-                    }
-                    
-                    function updateCRT() {
-                        const sVal = staticRange.value;
-                        const scVal = scanlineRange.value;
-                        const jVal = jitterRange.value;
-                        
-                        staticVal.innerText = sVal + '%';
-                        scanlineVal.innerText = scVal + '%';
-                        jitterVal.innerText = jVal + 'px';
-                        
-                        document.documentElement.style.setProperty('--tv-static-opacity', (sVal / 100).toFixed(2));
-                        document.documentElement.style.setProperty('--tv-scanline-opacity', (scVal / 100).toFixed(2));
-                        document.documentElement.style.setProperty('--tv-glitch-displacement', jVal + 'px');
-                        document.documentElement.style.setProperty('--tv-glitch-skew', (jVal * 1.5) + 'deg');
-                        
-                        // Save config
-                        localStorage.setItem('crt-static', sVal);
-                        localStorage.setItem('crt-scanlines', scVal);
-                        localStorage.setItem('crt-jitter', jVal);
-                    }
-                    
-                    // Wire listeners
-                    staticRange.addEventListener('input', updateCRT);
-                    scanlineRange.addEventListener('input', updateCRT);
-                    jitterRange.addEventListener('input', updateCRT);
-                    
-                    // Trigger initial values
-                    updateCRT();
                 }
             });
         </script>
@@ -397,54 +286,11 @@
             @endif
 
             <div class="text-center mb-8">
-                <div class="inline-block mb-3 neon-logo relative">
-                    <div class="tv-glitch-container relative overflow-hidden shadow-lg border border-emerald-500/20 w-16 h-16 rounded-2xl">
-                        <img src="{{ asset('images/abikun.png') }}" alt="Logo" class="tv-logo w-full h-full object-cover">
-                        <div class="tv-static-overlay"></div>
-                        <div class="tv-scanlines"></div>
-                        <div class="tv-turn-on-overlay"></div>
+                <div class="inline-block mb-3 neon-logo">
+                    <div class="neon-lamp-container relative overflow-hidden shadow-lg w-16 h-16 rounded-2xl flex items-center justify-center">
+                        <img src="{{ asset('images/abikun.png') }}" alt="Logo" class="neon-logo-img w-full h-full object-cover">
                     </div>
                 </div>
-
-                <!-- CRT Dynamic Intensity Adjuster -->
-                <div class="flex justify-center mb-2">
-                    <button id="crt-control-trigger" type="button" class="px-2.5 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/25 border border-emerald-500/20 hover:border-emerald-500/40 text-[7px] font-black text-emerald-400 uppercase tracking-widest transition-all cursor-pointer">
-                        ⚙️ CRT ADJUSTER
-                    </button>
-                </div>
-
-                <!-- Sliding CRT control panel (hidden by default) -->
-                <div id="crt-control-panel" class="hidden max-w-[260px] mx-auto mb-4 p-3 bg-black/50 border border-emerald-500/30 rounded-2xl backdrop-blur-md text-left space-y-2.5">
-                    <div class="flex justify-between items-center pb-1 border-b border-emerald-500/10">
-                        <span class="text-[8px] font-black text-emerald-400 uppercase tracking-widest">CRT Monitor Controls</span>
-                        <span class="text-[7px] text-white/40 uppercase font-bold">Analog System</span>
-                    </div>
-                    
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-[8px] font-black uppercase text-white/50 tracking-wider">
-                            <span>Static Noise (Runyek)</span>
-                            <span id="static-val" class="text-emerald-400">35%</span>
-                        </div>
-                        <input id="static-range" type="range" min="0" max="80" value="35" class="w-full h-1 bg-emerald-950 accent-emerald-400 rounded-lg appearance-none cursor-pointer">
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-[8px] font-black uppercase text-white/50 tracking-wider">
-                            <span>Scanlines Thickness</span>
-                            <span id="scanline-val" class="text-emerald-400">45%</span>
-                        </div>
-                        <input id="scanline-range" type="range" min="0" max="80" value="45" class="w-full h-1 bg-emerald-950 accent-emerald-400 rounded-lg appearance-none cursor-pointer">
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-[8px] font-black uppercase text-white/50 tracking-wider">
-                            <span>Glitch Jitter Intensity</span>
-                            <span id="jitter-val" class="text-emerald-400">3px</span>
-                        </div>
-                        <input id="jitter-range" type="range" min="0" max="15" value="3" class="w-full h-1 bg-emerald-950 accent-emerald-400 rounded-lg appearance-none cursor-pointer">
-                    </div>
-                </div>
-
                 <h1 class="text-2xl font-extrabold text-white tracking-tight uppercase">Kas <span class="text-emerald-400">RT</span></h1>
                 <p class="text-emerald-200/40 text-[8px] font-bold uppercase tracking-[0.4em] mt-1 italic">Financial Elite</p>
             </div>
