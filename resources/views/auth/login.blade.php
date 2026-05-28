@@ -8,6 +8,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Default CRT Parameters - completely adjustable in real-time! */
+            --tv-static-opacity: 0.35;
+            --tv-scanline-opacity: 0.45;
+            --tv-glitch-displacement: 3px;
+            --tv-glitch-skew: 4deg;
+            --tv-phosphor-glow: 20px;
+        }
+
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #022c22; }
 
         .cyber-bg {
@@ -108,11 +117,11 @@
             pointer-events: none;
             background: linear-gradient(
                 rgba(18, 16, 16, 0) 40%, 
-                rgba(0, 0, 0, 0.15) 60%
+                rgba(0, 0, 0, 0.35) 60%
             );
             background-size: 100% 3px;
             z-index: 2;
-            opacity: 0.4;
+            opacity: var(--tv-scanline-opacity);
         }
 
         /* --- CRT TV Turn-On Power Effect --- */
@@ -302,6 +311,59 @@
                     dollar.style.fontSize = (Math.random() * 10 + 20) + 'px';
                     container.appendChild(dollar);
                 }
+
+                // --- Interactive CRT Real-Time Adjustment System ---
+                const trigger = document.getElementById('crt-control-trigger');
+                const panel = document.getElementById('crt-control-panel');
+                
+                if (trigger && panel) {
+                    trigger.addEventListener('click', () => {
+                        panel.classList.toggle('hidden');
+                        trigger.classList.toggle('bg-emerald-500/20');
+                    });
+                    
+                    const staticRange = document.getElementById('static-range');
+                    const staticVal = document.getElementById('static-val');
+                    const scanlineRange = document.getElementById('scanline-range');
+                    const scanlineVal = document.getElementById('scanline-val');
+                    const jitterRange = document.getElementById('jitter-range');
+                    const jitterVal = document.getElementById('jitter-val');
+                    
+                    // Initialize or load from localStorage
+                    if (localStorage.getItem('crt-static') !== null) {
+                        staticRange.value = localStorage.getItem('crt-static');
+                        scanlineRange.value = localStorage.getItem('crt-scanlines');
+                        jitterRange.value = localStorage.getItem('crt-jitter');
+                    }
+                    
+                    function updateCRT() {
+                        const sVal = staticRange.value;
+                        const scVal = scanlineRange.value;
+                        const jVal = jitterRange.value;
+                        
+                        staticVal.innerText = sVal + '%';
+                        scanlineVal.innerText = scVal + '%';
+                        jitterVal.innerText = jVal + 'px';
+                        
+                        document.documentElement.style.setProperty('--tv-static-opacity', (sVal / 100).toFixed(2));
+                        document.documentElement.style.setProperty('--tv-scanline-opacity', (scVal / 100).toFixed(2));
+                        document.documentElement.style.setProperty('--tv-glitch-displacement', jVal + 'px');
+                        document.documentElement.style.setProperty('--tv-glitch-skew', (jVal * 1.5) + 'deg');
+                        
+                        // Save config
+                        localStorage.setItem('crt-static', sVal);
+                        localStorage.setItem('crt-scanlines', scVal);
+                        localStorage.setItem('crt-jitter', jVal);
+                    }
+                    
+                    // Wire listeners
+                    staticRange.addEventListener('input', updateCRT);
+                    scanlineRange.addEventListener('input', updateCRT);
+                    jitterRange.addEventListener('input', updateCRT);
+                    
+                    // Trigger initial values
+                    updateCRT();
+                }
             });
         </script>
 
@@ -335,7 +397,7 @@
             @endif
 
             <div class="text-center mb-8">
-                <div class="inline-block mb-3 neon-logo">
+                <div class="inline-block mb-3 neon-logo relative">
                     <div class="tv-glitch-container relative overflow-hidden shadow-lg border border-emerald-500/20 w-16 h-16 rounded-2xl">
                         <img src="{{ asset('images/abikun.png') }}" alt="Logo" class="tv-logo w-full h-full object-cover">
                         <div class="tv-static-overlay"></div>
@@ -343,6 +405,46 @@
                         <div class="tv-turn-on-overlay"></div>
                     </div>
                 </div>
+
+                <!-- CRT Dynamic Intensity Adjuster -->
+                <div class="flex justify-center mb-2">
+                    <button id="crt-control-trigger" type="button" class="px-2.5 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/25 border border-emerald-500/20 hover:border-emerald-500/40 text-[7px] font-black text-emerald-400 uppercase tracking-widest transition-all cursor-pointer">
+                        ⚙️ CRT ADJUSTER
+                    </button>
+                </div>
+
+                <!-- Sliding CRT control panel (hidden by default) -->
+                <div id="crt-control-panel" class="hidden max-w-[260px] mx-auto mb-4 p-3 bg-black/50 border border-emerald-500/30 rounded-2xl backdrop-blur-md text-left space-y-2.5">
+                    <div class="flex justify-between items-center pb-1 border-b border-emerald-500/10">
+                        <span class="text-[8px] font-black text-emerald-400 uppercase tracking-widest">CRT Monitor Controls</span>
+                        <span class="text-[7px] text-white/40 uppercase font-bold">Analog System</span>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[8px] font-black uppercase text-white/50 tracking-wider">
+                            <span>Static Noise (Runyek)</span>
+                            <span id="static-val" class="text-emerald-400">35%</span>
+                        </div>
+                        <input id="static-range" type="range" min="0" max="80" value="35" class="w-full h-1 bg-emerald-950 accent-emerald-400 rounded-lg appearance-none cursor-pointer">
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[8px] font-black uppercase text-white/50 tracking-wider">
+                            <span>Scanlines Thickness</span>
+                            <span id="scanline-val" class="text-emerald-400">45%</span>
+                        </div>
+                        <input id="scanline-range" type="range" min="0" max="80" value="45" class="w-full h-1 bg-emerald-950 accent-emerald-400 rounded-lg appearance-none cursor-pointer">
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[8px] font-black uppercase text-white/50 tracking-wider">
+                            <span>Glitch Jitter Intensity</span>
+                            <span id="jitter-val" class="text-emerald-400">3px</span>
+                        </div>
+                        <input id="jitter-range" type="range" min="0" max="15" value="3" class="w-full h-1 bg-emerald-950 accent-emerald-400 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+
                 <h1 class="text-2xl font-extrabold text-white tracking-tight uppercase">Kas <span class="text-emerald-400">RT</span></h1>
                 <p class="text-emerald-200/40 text-[8px] font-bold uppercase tracking-[0.4em] mt-1 italic">Financial Elite</p>
             </div>
