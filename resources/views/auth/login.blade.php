@@ -74,6 +74,99 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .notif-animate { animation: slideIn 0.5s ease-out forwards; }
+    
+        
+    
+        /* --- TV Glitch & Static Runyek-Runyek Effect --- */
+        .tv-glitch-container {
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .tv-logo {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            animation: tv-glitch-shake 3s infinite steps(1);
+        }
+        .tv-static-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.18;
+            background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23noiseFilter)'/></svg>");
+            animation: tv-static-noise 0.1s steps(4) infinite;
+            mix-blend-mode: color-dodge;
+        }
+        .tv-scanlines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 2;
+        }
+        @keyframes tv-static-noise {
+            0% { transform: translate(0,0) scale(1); }
+            10% { transform: translate(-1%, -1%) scale(1.1); }
+            20% { transform: translate(1%, 2%) scale(1); }
+            30% { transform: translate(-2%, -2%) scale(1.2); }
+            40% { transform: translate(1%, 3%) scale(1.1); }
+            50% { transform: translate(-1%, 1%) scale(1); }
+            60% { transform: translate(2%, -1%) scale(1.2); }
+            70% { transform: translate(-2%, 2%) scale(1.1); }
+            80% { transform: translate(1%, -3%) scale(1); }
+            90% { transform: translate(-1%, 2%) scale(1.2); }
+            100% { transform: translate(0,0) scale(1.1); }
+        }
+        @keyframes tv-glitch-shake {
+            0%, 100% {
+                transform: translate(0, 0) skew(0deg);
+                filter: brightness(1) contrast(1) hue-rotate(0deg);
+            }
+            10% {
+                transform: translate(-1px, 1px) skew(-2deg);
+                filter: brightness(1.2) contrast(1.1) hue-rotate(90deg);
+            }
+            11% {
+                transform: translate(0, 0) skew(0deg);
+                filter: brightness(1) contrast(1) hue-rotate(0deg);
+            }
+            45% {
+                transform: translate(0, 0) skew(0deg);
+                filter: brightness(1) contrast(1) hue-rotate(0deg);
+            }
+            46% {
+                transform: translate(2px, -1px) skew(3deg);
+                filter: brightness(1.5) contrast(1.3) hue-rotate(-90deg) saturate(1.5);
+            }
+            47% {
+                transform: translate(-3px, 2px) skew(-5deg) scaleY(1.05);
+                filter: brightness(0.7) contrast(1.5) invert(1) hue-rotate(180deg);
+            }
+            48% {
+                transform: translate(0, 0) skew(0deg);
+                filter: brightness(1) contrast(1) hue-rotate(0deg);
+            }
+            82% {
+                transform: translate(0, 0) skew(0deg);
+                filter: brightness(1) contrast(1) hue-rotate(0deg);
+            }
+            83% {
+                transform: translate(-2px, -2px) skew(1deg);
+                filter: brightness(1.3) contrast(1.2) sepia(1) hue-rotate(45deg);
+            }
+            84% {
+                transform: translate(0, 0) skew(0deg);
+                filter: brightness(1) contrast(1) hue-rotate(0deg);
+            }
+        }
+    
     </style>
 </head>
 <body class="antialiased">
@@ -128,7 +221,12 @@
 
             <div class="text-center mb-8">
                 <div class="inline-block mb-3 neon-logo">
-                    <img src="{{ asset('images/abikun.png') }}" alt="Logo" class="w-16 h-16 rounded-2xl object-cover shadow-lg border border-emerald-500/20">
+                    <div class="tv-glitch-container relative overflow-hidden shadow-lg border border-emerald-500/20 w-16 h-16 rounded-2xl">
+                        <img src="{{ asset('images/abikun.png') }}" alt="Logo" class="tv-logo w-full h-full object-cover">
+                        <div class="tv-static-overlay"></div>
+                        <div class="tv-scanlines"></div>
+                    </div>
+                </div>
                 </div>
                 <h1 class="text-2xl font-extrabold text-white tracking-tight uppercase">Kas <span class="text-emerald-400">RT</span></h1>
                 <p class="text-emerald-200/40 text-[8px] font-bold uppercase tracking-[0.4em] mt-1 italic">Financial Elite</p>

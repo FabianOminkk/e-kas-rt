@@ -154,6 +154,72 @@ class DashboardController extends Controller
     }
 
     /**
+     * Menampilkan Halaman Terpisah Data Warga (Demografi & Database).
+     */
+    public function wargaKeseluruhan()
+    {
+        $user = Auth::user();
+        if ($user->role === 'warga') {
+            return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki otoritas akses untuk fitur ini.');
+        }
+
+        $bulanSekarang = now()->month;
+        $tahunSekarang = now()->year;
+
+        $dataWarga = User::where('role', 'warga')
+            ->with(['iurans' => function($query) use ($bulanSekarang, $tahunSekarang) {
+                $query->where('bulan', $bulanSekarang)->where('tahun', $tahunSekarang);
+            }])
+            ->addSelect([
+                'iuran_status' => Iuran::select('status')
+                    ->whereColumn('user_id', 'users.id')
+                    ->where('bulan', $bulanSekarang)
+                    ->where('tahun', $tahunSekarang)
+                    ->limit(1)
+            ])
+            ->orderByRaw("
+                CASE 
+                    WHEN iuran_status = 'lunas' THEN 1 
+                    WHEN iuran_status = 'menunggu' THEN 2 
+                    ELSE 3 
+                END ASC
+            ")
+            ->get();
+
+        $demographics = [
+            'bayi' => 0,
+            'anak' => 0,
+            'remaja' => 0,
+            'dewasa' => 0,
+            'lansia' => 0,
+        ];
+
+        foreach ($dataWarga as $warga) {
+            if (!$warga->tanggal_lahir) {
+                continue;
+            }
+            
+            $birthdate = Carbon::parse($warga->tanggal_lahir);
+            $ageInMonths = $birthdate->diffInMonths(Carbon::now());
+            $ageInYears = $birthdate->age;
+            
+            if ($ageInMonths < 12) {
+                $demographics['bayi']++;
+            } elseif ($ageInYears < 17) {
+                $demographics['anak']++;
+            } elseif ($ageInYears < 30) {
+                $demographics['remaja']++;
+            } elseif ($ageInYears <= 60) {
+                $demographics['dewasa']++;
+            } else {
+                $demographics['lansia']++;
+            }
+        }
+
+        return view('data_warga', compact('dataWarga', 'demographics'));
+    }
+
+    /**
      * Menampilkan Halaman Dompet Saya (Khusus Role Warga).
      */
     public function dompet(Request $request)

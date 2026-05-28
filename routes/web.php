@@ -18,6 +18,20 @@ Route::get('/', function () {
 // 2. Authenticated Routes (Harus Login)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dompet', [App\Http\Controllers\DashboardController::class, 'dompet'])->name('dompet.index');
+    
+    // --------------------------------------------------------
+    // Inventaris & Penyewaan Aset (Asset Management)
+    // --------------------------------------------------------
+    Route::controller(\App\Http\Controllers\AssetController::class)->group(function () {
+        Route::get('/aset', 'index')->name('asset.index');
+        Route::post('/aset', 'store')->name('asset.store');
+        Route::put('/aset/{id}', 'update')->name('asset.update');
+        Route::delete('/aset/{id}', 'destroy')->name('asset.destroy');
+        Route::post('/aset/sewa', 'storeSewa')->name('asset.sewa.store');
+        Route::patch('/aset/sewa/{id}/setuju', 'setujuSewa')->name('asset.sewa.setuju');
+        Route::patch('/aset/sewa/{id}/tolak', 'tolakSewa')->name('asset.sewa.tolak');
+        Route::patch('/aset/sewa/{id}/kembali', 'kembaliSewa')->name('asset.sewa.kembali');
+    });
 // Route untuk Mading Informasi
 Route::post('/announcement', [App\Http\Controllers\DashboardController::class, 'storeAnnouncement'])->name('announcement.store');
 Route::patch('/announcement/{id}', [App\Http\Controllers\DashboardController::class, 'updateAnnouncement'])->name('announcement.update');
@@ -28,6 +42,9 @@ Route::delete('/announcement/{id}', [App\Http\Controllers\DashboardController::c
     Route::controller(DashboardController::class)->group(function () {
         // Halaman Utama Dashboard
         Route::get('/dashboard', 'index')->name('dashboard');
+
+        // Halaman Terpisah Data Warga (Demografi & Database)
+        Route::get('/data-warga', 'wargaKeseluruhan')->name('warga.index');
 
         // CRUD Warga
         Route::post('/tambah-warga', 'storeWarga')->name('warga.store');

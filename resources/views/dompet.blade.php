@@ -184,6 +184,8 @@
             background-color: rgba(255, 255, 255, 0.95) !important;
             border-color: rgba(226, 232, 240, 0.8) !important;
         }
+    
+        
     </style>
 </head>
 <body class="antialiased">

@@ -55,6 +55,38 @@ class User extends Authenticatable
     }
 
     /**
+     * Relasi ke tabel asset_rentals.
+     */
+    public function assetRentals()
+    {
+        return $this->hasMany(AssetRental::class, 'user_id');
+    }
+
+    /**
+     * Helper: Menentukan apakah warga ini rajin membayar kas tahun ini.
+     * Syarat rajin: Warga sudah lunas kas sampai bulan berjalan atau minimal sudah membayar 4 bulan lunas di tahun ini.
+     */
+    public function isRajinBayarKas()
+    {
+        if ($this->role !== 'warga') {
+            return false;
+        }
+
+        $currentYear = now()->year;
+        $currentMonth = now()->month;
+
+        // Hitung berapa bulan di tahun berjalan yang sudah LUNAS
+        $monthsPaidCount = $this->iurans()
+            ->where('tahun', $currentYear)
+            ->where('status', 'lunas')
+            ->count();
+
+        // Dianggap rajin jika iurannya lunas minimal sebanyak bulan berjalan,
+        // atau jika sudah lunas setidaknya 4 bulan.
+        return $monthsPaidCount >= $currentMonth || $monthsPaidCount >= 4;
+    }
+
+    /**
      * Fungsi pembantu untuk cek status bulan ini.
      * Digunakan untuk notifikasi jatuh tempo atau status LUNAS di dashboard.
      */

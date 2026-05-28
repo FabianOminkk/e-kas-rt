@@ -54,6 +54,10 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         
+        main {
+            scroll-behavior: smooth;
+        }
+        
         .glass-sidebar { 
             background: var(--glass-sidebar); 
             backdrop-filter: blur(20px); 
@@ -182,6 +186,8 @@
             background-color: rgba(255, 255, 255, 0.95) !important;
             border-color: rgba(226, 232, 240, 0.8) !important;
         }
+    
+        
     </style>
 </head>
 <body class="antialiased">
@@ -199,12 +205,16 @@
             </div>
 
             <nav class="flex-1 space-y-3">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-4 px-3 py-3 {{ request()->routeIs('dashboard') ? 'bg-emerald-500 text-[#022c22]' : 'text-emerald-200/50 hover:bg-white/5' }} rounded-xl shadow-lg transition-all">
+                <a href="#dashboard-top" id="nav-dashboard" class="flex items-center gap-4 px-3 py-3 bg-emerald-500 text-[#022c22] rounded-xl shadow-lg transition-all nav-scroll-link">
                     <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-house"></i></div>
                     <span class="sidebar-text text-xs font-black uppercase tracking-widest">Dashboard</span>
                 </a>
                 
                 @if(auth()->user()->role == 'warga')
+                    <a href="{{ route('asset.index') }}" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Inventaris Aset</span>
+                    </a>
                     <a href="{{ route('profile.edit') }}" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
                         <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-user-gear"></i></div>
                         <span class="sidebar-text text-xs font-black uppercase tracking-widest">Ubah Profil</span>
@@ -214,13 +224,21 @@
                         <span class="sidebar-text text-xs font-black uppercase tracking-widest">Dompet Saya</span>
                     </a>
                 @else
-                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
-                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-user-gear"></i></div>
-                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Setting Profil</span>
-                    </a>
-                    <a href="#database-warga" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
+                    <a href="{{ route('warga.index') }}" id="nav-warga" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
                         <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-users"></i></div>
                         <span class="sidebar-text text-xs font-black uppercase tracking-widest">Data Warga</span>
+                    </a>
+                    <a href="{{ route('asset.index') }}" id="nav-inventaris-aset" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Inventaris Aset</span>
+                    </a>
+                    <a href="#mading-informasi" id="nav-mading-informasi" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all nav-scroll-link">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-bullhorn"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Announcement</span>
+                    </a>
+                    <a href="{{ route('profile.edit') }}" id="nav-profile-edit" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-user-gear"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Setting Profil</span>
                     </a>
                 @endif
             </nav>
@@ -256,7 +274,7 @@
 
         {{-- MAIN CONTENT --}}
         <main class="flex-1 overflow-y-auto bg-[#020617] p-8">
-            <div class="max-w-[96rem] mx-auto w-full px-4 md:px-6">
+            <div id="dashboard-top" class="max-w-[96rem] mx-auto w-full px-4 md:px-6 scroll-mt-8">
                 <div class="flex justify-between items-end mb-10">
                     <div>
                         <h2 class="text-4xl font-black text-white tracking-tighter uppercase italic">E-KAS</h2>
@@ -375,6 +393,7 @@
                         </div>
                     </div>
                 </div>
+
                 @endif
 
 
@@ -416,7 +435,7 @@
                 @endif
 
                 {{-- MADING INFORMASI --}}
-                <div class="glass-card rounded-3xl p-8 mb-8">
+                <div id="mading-informasi" class="glass-card rounded-3xl p-8 mb-8 scroll-mt-8">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-blue-400 font-black text-xl uppercase tracking-tighter flex items-center gap-3">
                             <i class="fa-solid fa-bullhorn text-lg"></i> Mading Informasi RT
@@ -460,232 +479,6 @@
                         @endforelse
                     </div>
                 </div>
-
-                {{-- DATABASE WARGA --}}
-                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'bendahara')
-                <div id="database-warga" class="glass-card rounded-3xl p-8 scroll-mt-8">
-                    <h3 class="text-emerald-400 font-black text-xl uppercase tracking-tighter mb-6 flex items-center gap-3"><i class="fa-solid fa-users text-lg"></i> Database Warga RT</h3>
-                    <div class="overflow-x-auto hidden md:block">
-                        <table class="w-full text-center">
-                            <thead>
-                                <tr class="text-emerald-200/20 text-xs uppercase tracking-wider border-b border-white/5 whitespace-nowrap">
-                                    <th class="pb-4 text-center pl-4 w-12">No.</th>
-                                    <th class="pb-4 text-left pl-4">Warga / NIK</th>
-                                    <th class="pb-4">Gender</th>
-                                    <th class="pb-4 text-left">Tempat, Tgl Lahir</th>
-                                    <th class="pb-4">No. Telp</th>
-                                    <th class="pb-4">Agama</th>
-                                    <th class="pb-4 text-left">Alamat & Tinggal</th>
-                                    <th class="pb-4">Status Pernikahan</th>
-                                    <th class="pb-4">Status Kas</th>
-                                    <th class="pb-4">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-white/60 text-sm">
-                                @foreach($dataWarga as $warga)
-                                <tr class="border-b border-white/5 hover:bg-white/[0.02]">
-                                    <td class="py-4 text-center font-mono text-xs text-white/40 pl-4 w-12">{{ $loop->iteration }}</td>
-                                    <td class="py-4 text-left whitespace-nowrap pl-4">
-                                        <div class="flex items-center gap-3">
-                                            @if($warga->foto_profil)
-                                                <img src="{{ asset('profil/' . $warga->foto_profil) }}" alt="Avatar" class="w-9 h-9 rounded-full object-cover border border-emerald-500/50 shadow-md">
-                                            @else
-                                                <div class="w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-sm font-black uppercase shadow-md">
-                                                    {{ substr($warga->name, 0, 1) }}
-                                                </div>
-                                            @endif
-                                            <div class="flex flex-col">
-                                                <span class="font-bold text-white text-sm leading-tight">{{ $warga->name }}</span>
-                                                <span class="font-mono text-xs text-white/40 tracking-wider mt-0.5">NIK: {{ $warga->nik ?? '-' }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 text-xs whitespace-nowrap">
-                                        @if($warga->jenis_kelamin === 'Laki-laki')
-                                            <span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md font-semibold text-xs">Laki-laki</span>
-                                        @elseif($warga->jenis_kelamin === 'Perempuan')
-                                            <span class="px-2.5 py-1 bg-pink-500/10 text-pink-400 border border-pink-500/20 rounded-md font-semibold text-xs">Perempuan</span>
-                                        @else
-                                            <span class="px-2.5 py-1 bg-white/10 text-white/50 rounded-md font-semibold text-xs">-</span>
-                                        @endif
-                                    </td>
-                                    <td class="py-4 text-left whitespace-nowrap text-sm text-white/80">
-                                        @if($warga->tempat_lahir)
-                                            {{ $warga->tempat_lahir }}, 
-                                        @endif
-                                        {{ $warga->tanggal_lahir ? $warga->tanggal_lahir->translatedFormat('d M Y') : '-' }}
-                                    </td>
-                                    <td class="py-4 text-sm font-mono text-white/80 whitespace-nowrap">{{ $warga->no_telp }}</td>
-                                    <td class="py-4 text-sm text-white/80 whitespace-nowrap capitalize">{{ $warga->agama ?? '-' }}</td>
-                                    <td class="py-4 text-left text-sm text-white/80">
-                                        <div class="font-semibold text-white">{{ $warga->alamat }}</div>
-                                        <div class="mt-1">
-                                            @if($warga->status_tinggal === 'Kos')
-                                                <span class="text-[10px] px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-md font-bold uppercase tracking-wider">KOS</span>
-                                            @elseif($warga->status_tinggal === 'Pemilik' || $warga->status_tinggal === 'Sewa')
-                                                <span class="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-md font-bold uppercase tracking-wider">RUMAH</span>
-                                            @else
-                                                <span class="text-[10px] px-2 py-0.5 bg-white/10 text-white/50 rounded-md font-bold uppercase tracking-wider">Belum Set</span>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    <td class="py-4 text-xs whitespace-nowrap">
-                                        @if($warga->status_pernikahan === 'sudah_menikah')
-                                            <span class="px-2.5 py-1 bg-purple-500/20 text-purple-400 rounded-md font-black uppercase text-[10px] tracking-wider">SUDAH MENIKAH</span>
-                                        @else
-                                            <span class="px-2.5 py-1 bg-slate-500/20 text-slate-400 rounded-md font-black uppercase text-[10px] tracking-wider">BELUM MENIKAH</span>
-                                        @endif
-                                    </td>
-                                    <td class="py-4 whitespace-nowrap">
-                                        @php
-                                            $iuranBulanIni = $warga->iurans->first();
-                                            $status = $iuranBulanIni ? $iuranBulanIni->status : 'belum_bayar';
-                                        @endphp
-                                        @if($status === 'lunas')
-                                            <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 text-[10px] font-black rounded-md uppercase tracking-wider">LUNAS</span>
-                                        @elseif($status === 'menunggu')
-                                            <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-black rounded-md uppercase tracking-wider">DIPROSES</span>
-                                        @else
-                                            <span class="px-3 py-1 bg-red-500/20 text-red-400 text-[10px] font-black rounded-md uppercase tracking-wider">BELUM BAYAR</span>
-                                        @endif
-                                    </td>
-                                    <td class="py-4">
-                                        <div class="flex justify-center gap-3">
-                                            <button onclick="bukaModalEditWarga('{{ $warga->id }}', '{{ $warga->nik }}', '{{ addslashes($warga->name) }}', '{{ $warga->email }}', '{{ $warga->no_telp }}', '{{ $warga->tanggal_lahir ? $warga->tanggal_lahir->format('Y-m-d') : '' }}', '{{ $warga->jenis_kelamin }}', '{{ addslashes($warga->agama) }}', '{{ addslashes($warga->alamat) }}', '{{ addslashes($warga->tempat_lahir) }}', '{{ $warga->status_tinggal }}', '{{ $warga->status_pernikahan }}')" class="text-blue-500/70 hover:text-blue-400 transition-all"><i class="fa-solid fa-pen-to-square"></i></button>
-                                            <form action="{{ route('warga.destroy', $warga->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data warga ini secara permanen?')">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="text-red-500/70 hover:text-red-400 transition-all"><i class="fa-solid fa-trash"></i></button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Tampilan Warga Versi Mobile (Laci/Accordion Drawer) -->
-                    <div class="block md:hidden space-y-4">
-                        @foreach($dataWarga as $warga)
-                        <div class="mobile-warga-card group relative glass-card rounded-2xl p-4 border border-white/5 transition-all duration-300 hover:border-emerald-500/30 hover:bg-emerald-950/10 cursor-pointer overflow-hidden" data-warga-id="{{ $warga->id }}">
-                            <!-- Card Header (Always Visible) -->
-                            <div class="flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-3">
-                                    @if($warga->foto_profil)
-                                        <img src="{{ asset('profil/' . $warga->foto_profil) }}" alt="Avatar" class="w-10 h-10 rounded-full object-cover border border-emerald-500/50 shadow-md">
-                                    @else
-                                        <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-sm font-black uppercase shadow-md">
-                                            {{ substr($warga->name, 0, 1) }}
-                                        </div>
-                                    @endif
-                                    <div class="flex flex-col">
-                                        <span class="font-bold text-white text-sm leading-tight">{{ $loop->iteration }}. {{ $warga->name }}</span>
-                                        <span class="font-mono text-[10px] text-white/40 tracking-wider mt-0.5">NIK: {{ $warga->nik ?? '-' }}</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center gap-2">
-                                    @php
-                                        $iuranBulanIni = $warga->iurans->first();
-                                        $status = $iuranBulanIni ? $iuranBulanIni->status : 'belum_bayar';
-                                    @endphp
-                                    @if($status === 'lunas')
-                                        <span class="px-2.5 py-0.5 bg-emerald-500/20 text-emerald-400 text-[9px] font-black rounded-md uppercase tracking-wider">LUNAS</span>
-                                    @elseif($status === 'menunggu')
-                                        <span class="px-2.5 py-0.5 bg-yellow-500/20 text-yellow-400 text-[9px] font-black rounded-md uppercase tracking-wider">DIPROSES</span>
-                                    @else
-                                        <span class="px-2.5 py-0.5 bg-red-500/20 text-red-400 text-[9px] font-black rounded-md uppercase tracking-wider">BELUM BAYAR</span>
-                                    @endif
-                                    
-                                    <!-- Chevron Indicator -->
-                                    <i class="fa-solid fa-chevron-down text-white/40 text-xs transition-transform duration-300 group-hover:rotate-180 group-[.active-drawer]:rotate-180"></i>
-                                </div>
-                            </div>
-
-                            <!-- Card Content (Collapsible Drawer) -->
-                            <div class="mobile-warga-drawer overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-in-out group-hover:max-h-[500px] group-hover:opacity-100 group-[.active-drawer]:max-h-[500px] group-[.active-drawer]:opacity-100">
-                                <div class="mt-4 pt-4 border-t border-white/5 space-y-3 text-xs text-white/70">
-                                    <!-- Grid details -->
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <span class="text-[9px] font-bold text-emerald-400/50 uppercase tracking-widest block mb-0.5">Gender</span>
-                                            @if($warga->jenis_kelamin === 'Laki-laki')
-                                                <span class="text-blue-400 font-semibold"><i class="fa-solid fa-mars mr-1"></i> Laki-laki</span>
-                                            @elseif($warga->jenis_kelamin === 'Perempuan')
-                                                <span class="text-pink-400 font-semibold"><i class="fa-solid fa-venus mr-1"></i> Perempuan</span>
-                                            @else
-                                                <span class="text-white/50">-</span>
-                                            @endif
-                                        </div>
-                                        <div>
-                                            <span class="text-[9px] font-bold text-emerald-400/50 uppercase tracking-widest block mb-0.5">Agama</span>
-                                            <span class="text-white font-semibold capitalize">{{ $warga->agama ?? '-' }}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="col-span-2">
-                                            <span class="text-[9px] font-bold text-emerald-400/50 uppercase tracking-widest block mb-0.5">Tempat, Tgl Lahir</span>
-                                            <span class="text-white font-semibold">
-                                                @if($warga->tempat_lahir)
-                                                    {{ $warga->tempat_lahir }}, 
-                                                @endif
-                                                {{ $warga->tanggal_lahir ? $warga->tanggal_lahir->translatedFormat('d M Y') : '-' }}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <span class="text-[9px] font-bold text-emerald-400/50 uppercase tracking-widest block mb-0.5">No. Telp</span>
-                                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $warga->no_telp) }}" target="_blank" class="text-emerald-400 hover:text-emerald-300 transition-all font-mono font-semibold flex items-center gap-1">
-                                                <i class="fa-brands fa-whatsapp text-sm"></i> {{ $warga->no_telp }}
-                                            </a>
-                                        </div>
-                                        <div>
-                                            <span class="text-[9px] font-bold text-emerald-400/50 uppercase tracking-widest block mb-0.5">Status Pernikahan</span>
-                                            @if($warga->status_pernikahan === 'sudah_menikah')
-                                                <span class="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded-md font-black uppercase text-[9px] tracking-wider inline-block">SUDAH MENIKAH</span>
-                                            @else
-                                                <span class="px-2 py-0.5 bg-slate-500/20 text-slate-400 rounded-md font-black uppercase text-[9px] tracking-wider inline-block">BELUM MENIKAH</span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <span class="text-[9px] font-bold text-emerald-400/50 uppercase tracking-widest block mb-0.5">Alamat & Status Tinggal</span>
-                                        <div class="text-white font-semibold">{{ $warga->alamat }}</div>
-                                        <div class="mt-1">
-                                            @if($warga->status_tinggal === 'Kos')
-                                                <span class="text-[9px] px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-md font-bold uppercase tracking-wider inline-block">KOS</span>
-                                            @elseif($warga->status_tinggal === 'Pemilik' || $warga->status_tinggal === 'Sewa')
-                                                <span class="text-[9px] px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-md font-bold uppercase tracking-wider inline-block">RUMAH ({{ $warga->status_tinggal }})</span>
-                                            @else
-                                                <span class="text-[9px] px-2 py-0.5 bg-white/10 text-white/50 rounded-md font-bold uppercase tracking-wider inline-block">Belum Set</span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <!-- Tombol Aksi -->
-                                    <div class="pt-4 border-t border-white/5 flex justify-end gap-3">
-                                        <button onclick="bukaModalEditWarga('{{ $warga->id }}', '{{ $warga->nik }}', '{{ addslashes($warga->name) }}', '{{ $warga->email }}', '{{ $warga->no_telp }}', '{{ $warga->tanggal_lahir ? $warga->tanggal_lahir->format('Y-m-d') : '' }}', '{{ $warga->jenis_kelamin }}', '{{ addslashes($warga->agama) }}', '{{ addslashes($warga->alamat) }}', '{{ addslashes($warga->tempat_lahir) }}', '{{ $warga->status_tinggal }}', '{{ $warga->status_pernikahan }}')" class="px-4 py-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500 hover:text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-lg">
-                                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                                        </button>
-                                        <form action="{{ route('warga.destroy', $warga->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data warga ini secara permanen?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="px-4 py-2 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-lg">
-                                                <i class="fa-solid fa-trash"></i> Hapus
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                </div>
-                @endif
             </div>
         </main>
     </div>
@@ -764,173 +557,9 @@
         </div>
     </div>
 
-    {{-- MODAL TAMBAH WARGA --}}
-    <div id="modalTambahWarga" class="fixed inset-0 z-[100] hidden items-center justify-center modal-bg px-4 py-8 overflow-y-auto">
-        <div class="glass-card w-full max-w-lg rounded-[2.5rem] p-8 border border-emerald-500/30 my-8">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-emerald-400 font-black text-xl uppercase italic tracking-tighter">Tambah Warga Baru</h3>
-                <button onclick="toggleModal()" class="text-white/40 hover:text-red-500 transition-colors text-lg"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <form action="{{ route('warga.store') }}" method="POST" class="space-y-4">
-                @csrf
-                <div>
-                    <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Nomor Induk Kependudukan (NIK)</label>
-                    <input type="text" name="nik" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="Contoh: 32751927410182" pattern="[0-9]{12,16}">
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Nama Lengkap</label>
-                        <input type="text" name="name" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Email</label>
-                        <input type="email" name="email" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Password</label>
-                        <input type="password" name="password" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Nomor Telepon</label>
-                        <input type="text" name="no_telp" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Tempat Lahir</label>
-                        <input type="text" name="tempat_lahir" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="Contoh: Jakarta">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Tanggal Lahir</label>
-                        <input type="date" name="tanggal_lahir" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Jenis Kelamin</label>
-                        <select name="jenis_kelamin" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Agama</label>
-                        <input type="text" name="agama" class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="Contoh: Islam">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Alamat Rumah</label>
-                        <input type="text" name="alamat" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="Contoh: Blok A No. 12">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Status Tempat Tinggal</label>
-                        <select name="status_tinggal" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                            <option value="Pemilik">Pemilik Rumah (Rumah)</option>
-                            <option value="Sewa">Sewa / Kontrak (Rumah)</option>
-                            <option value="Kos">Ngekos (Kos)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Status Pernikahan</label>
-                        <select name="status_pernikahan" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                            <option value="belum_menikah">Belum Menikah</option>
-                            <option value="sudah_menikah">Sudah Menikah</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-[#022c22] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:scale-[1.02] transition-all mt-4">Daftarkan Warga</button>
-            </form>
-        </div>
-    </div>
+    
 
-    {{-- MODAL EDIT WARGA --}}
-    <div id="modalEditWarga" class="fixed inset-0 z-[100] hidden items-center justify-center modal-bg px-4 py-8 overflow-y-auto">
-        <div class="glass-card w-full max-w-lg rounded-[2.5rem] p-8 border border-emerald-500/30 my-8">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-emerald-400 font-black text-xl uppercase italic tracking-tighter">Edit Data Warga</h3>
-                <button onclick="tutupModalEditWarga()" class="text-white/40 hover:text-red-500 transition-colors text-lg"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <form id="formEditWarga" action="" method="POST" class="space-y-4">
-                @csrf @method('PUT')
-                <div>
-                    <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Nomor Induk Kependudukan (NIK)</label>
-                    <input type="text" id="edit_warga_nik" name="nik" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="Contoh: 32751927410182" pattern="[0-9]{12,16}">
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Nama Lengkap</label>
-                        <input type="text" id="edit_warga_name" name="name" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Email</label>
-                        <input type="email" id="edit_warga_email" name="email" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Password (Kosongkan jika tidak diubah)</label>
-                        <input type="password" name="password" class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="******">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Nomor Telepon</label>
-                        <input type="text" id="edit_warga_no_telp" name="no_telp" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Tempat Lahir</label>
-                        <input type="text" id="edit_warga_tempat_lahir" name="tempat_lahir" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Tanggal Lahir</label>
-                        <input type="date" id="edit_warga_tanggal_lahir" name="tanggal_lahir" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Jenis Kelamin</label>
-                        <select id="edit_warga_jenis_kelamin" name="jenis_kelamin" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Agama</label>
-                        <input type="text" id="edit_warga_agama" name="agama" class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Alamat Rumah</label>
-                        <input type="text" id="edit_warga_alamat" name="alamat" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Status Tempat Tinggal</label>
-                        <select id="edit_warga_status_tinggal" name="status_tinggal" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                            <option value="Pemilik">Pemilik Rumah (Rumah)</option>
-                            <option value="Sewa">Sewa / Kontrak (Rumah)</option>
-                            <option value="Kos">Ngekos (Kos)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Status Pernikahan</label>
-                        <select id="edit_warga_status_pernikahan" name="status_pernikahan" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
-                            <option value="belum_menikah">Belum Menikah</option>
-                            <option value="sudah_menikah">Sudah Menikah</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-[#022c22] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:scale-[1.02] transition-all mt-4">Simpan Perubahan</button>
-            </form>
-        </div>
-    </div>
+    
 
     {{-- SCRIPTS BAWAAN LAINNYA --}}
     <script>
@@ -1008,38 +637,7 @@
             document.getElementById('modalTambahPengeluaran').classList.remove('flex');
         }
 
-        // FUNGSI WARGA (TAMBAH & EDIT)
-        function toggleModal() {
-            const modal = document.getElementById('modalTambahWarga');
-            if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            } else {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        }
 
-        function bukaModalEditWarga(id, nik, name, email, no_telp, tanggal_lahir, jenis_kelamin, agama, alamat, tempat_lahir, status_tinggal, status_pernikahan) {
-            document.getElementById('modalEditWarga').classList.remove('hidden');
-            document.getElementById('modalEditWarga').classList.add('flex');
-            document.getElementById('formEditWarga').action = `/warga/${id}`;
-            document.getElementById('edit_warga_nik').value = nik || '';
-            document.getElementById('edit_warga_name').value = name;
-            document.getElementById('edit_warga_email').value = email;
-            document.getElementById('edit_warga_no_telp').value = no_telp;
-            document.getElementById('edit_warga_tanggal_lahir').value = tanggal_lahir;
-            document.getElementById('edit_warga_jenis_kelamin').value = jenis_kelamin;
-            document.getElementById('edit_warga_agama').value = agama;
-            document.getElementById('edit_warga_alamat').value = alamat;
-            document.getElementById('edit_warga_tempat_lahir').value = tempat_lahir || '';
-            document.getElementById('edit_warga_status_tinggal').value = status_tinggal || 'Pemilik';
-            document.getElementById('edit_warga_status_pernikahan').value = status_pernikahan || 'belum_menikah';
-        }
-        function tutupModalEditWarga() {
-            document.getElementById('modalEditWarga').classList.add('hidden');
-            document.getElementById('modalEditWarga').classList.remove('flex');
-        }
 
         // FUNGSI LIHAT BUKTI PERSATUJUAN
         function lihatBukti(url) {
@@ -1181,19 +779,21 @@
         });
 
         function updateChartsForTheme(theme) {
-            if (chartBulanan && chartTahunan) {
-                const isLight = theme === 'light';
-                const labelColor = isLight ? '#0f172a' : 'rgba(255, 255, 255, 0.7)';
-                const gridColor = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)';
-                const tickColor = isLight ? '#64748b' : 'rgba(255, 255, 255, 0.5)';
-                
+            const isLight = theme === 'light';
+            const labelColor = isLight ? '#0f172a' : 'rgba(255, 255, 255, 0.7)';
+            const gridColor = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)';
+            const tickColor = isLight ? '#64748b' : 'rgba(255, 255, 255, 0.5)';
+
+            if (chartBulanan) {
                 chartBulanan.options.plugins.legend.labels.color = labelColor;
                 chartBulanan.options.scales.x.grid.color = gridColor;
                 chartBulanan.options.scales.x.ticks.color = tickColor;
                 chartBulanan.options.scales.y.grid.color = gridColor;
                 chartBulanan.options.scales.y.ticks.color = tickColor;
                 chartBulanan.update();
-                
+            }
+            
+            if (chartTahunan) {
                 chartTahunan.options.plugins.legend.labels.color = labelColor;
                 chartTahunan.options.scales.x.grid.color = gridColor;
                 chartTahunan.options.scales.x.ticks.color = tickColor;
@@ -1201,6 +801,8 @@
                 chartTahunan.options.scales.y.ticks.color = tickColor;
                 chartTahunan.update();
             }
+
+            
         }
         @endif
 
@@ -1285,6 +887,51 @@
                     updateChartsForTheme(currentTheme);
                 }
             }, 100);
+
+            // --- INTERSECTION OBSERVER FOR ACTIVE SIDEBAR HIGHLIGHT ---
+            const mainScrollContainer = document.querySelector('main');
+            const sections = [
+                { id: 'dashboard-top', navId: 'nav-dashboard' },
+                { id: 'mading-informasi', navId: 'nav-mading-informasi' }
+            ];
+
+            const observerOptions = {
+                root: mainScrollContainer,
+                rootMargin: '-5% 0px -55% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.id;
+                        const activeConfig = sections.find(s => s.id === activeId);
+                        
+                        if (activeConfig) {
+                            // Remove active styles from all scroll links
+                            sections.forEach(s => {
+                                const navElement = document.getElementById(s.navId);
+                                if (navElement) {
+                                    navElement.className = "flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all nav-scroll-link";
+                                }
+                            });
+
+                            // Add active styles to the current scroll link
+                            const activeNav = document.getElementById(activeConfig.navId);
+                            if (activeNav) {
+                                activeNav.className = "flex items-center gap-4 px-3 py-3 bg-emerald-500 text-[#022c22] rounded-xl shadow-lg transition-all nav-scroll-link";
+                            }
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(s => {
+                const el = document.getElementById(s.id);
+                if (el) {
+                    observer.observe(el);
+                }
+            });
         });
     </script>
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 font-sans">
