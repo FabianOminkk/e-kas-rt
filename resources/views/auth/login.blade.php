@@ -238,6 +238,9 @@
 <body class="antialiased">
     
     <div class="cyber-bg">
+        <!-- High-Performance Canvas for Ambient Rain Effect -->
+        <canvas id="rain-canvas" style="position: absolute; inset: 0; pointer-events: none; z-index: 2;"></canvas>
+
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const container = document.querySelector('.cyber-bg');
@@ -252,6 +255,58 @@
                     dollar.style.animationDelay = Math.random() * 8 + 's';
                     dollar.style.fontSize = (Math.random() * 10 + 20) + 'px';
                     container.appendChild(dollar);
+                }
+
+                // --- Cinematic Falling Rain Canvas System ---
+                const canvas = document.getElementById('rain-canvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    let width = canvas.width = window.innerWidth;
+                    let height = canvas.height = window.innerHeight;
+                    
+                    window.addEventListener('resize', () => {
+                        width = canvas.width = window.innerWidth;
+                        height = canvas.height = window.innerHeight;
+                    });
+                    
+                    const rainCount = 140;
+                    const raindrops = [];
+                    
+                    for (let i = 0; i < rainCount; i++) {
+                        raindrops.push({
+                            x: Math.random() * width,
+                            y: Math.random() * height - height,
+                            length: Math.random() * 25 + 15,
+                            speed: Math.random() * 15 + 15,
+                            opacity: Math.random() * 0.12 + 0.04,
+                            weight: Math.random() * 1 + 0.5
+                        });
+                    }
+                    
+                    function animateRain() {
+                        ctx.clearRect(0, 0, width, height);
+                        
+                        for (let i = 0; i < rainCount; i++) {
+                            const r = raindrops[i];
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(52, 211, 153, ${r.opacity})`;
+                            ctx.lineWidth = r.weight;
+                            ctx.moveTo(r.x, r.y);
+                            ctx.lineTo(r.x + 1, r.y + r.length);
+                            ctx.stroke();
+                            
+                            r.y += r.speed;
+                            r.x += 1;
+                            
+                            if (r.y > height) {
+                                r.y = -r.length;
+                                r.x = Math.random() * width;
+                                r.speed = Math.random() * 15 + 15;
+                            }
+                        }
+                        requestAnimationFrame(animateRain);
+                    }
+                    animateRain();
                 }
             });
         </script>
