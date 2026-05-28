@@ -80,10 +80,10 @@
         /* --- TV Glitch & Static Runyek-Runyek Effect --- */
         .tv-glitch-container {
             position: relative;
-            background: #000;
+            background: #022c22;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+            border: 1.5px solid rgba(52, 211, 153, 0.4);
         }
         .tv-logo {
             width: 100% !important;
@@ -105,12 +105,104 @@
             inset: 0;
             pointer-events: none;
             background: linear-gradient(
-                rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.25) 50%
+                rgba(18, 16, 16, 0) 40%, 
+                rgba(0, 0, 0, 0.15) 60%
             );
-            background-size: 100% 4px;
+            background-size: 100% 3px;
             z-index: 2;
+            opacity: 0.4;
         }
+
+        /* --- CRT TV Turn-On Power Effect --- */
+        .tv-turn-on-overlay {
+            position: absolute;
+            inset: 0;
+            background: #000000;
+            z-index: 10;
+            pointer-events: none;
+            animation: tv-screen-on 1.6s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+        }
+
+        .tv-turn-on-overlay::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #ffffff;
+            box-shadow: 0 0 12px 2px #ffffff, 0 0 20px 4px #10b981;
+            transform: scaleX(0);
+            transform-origin: center;
+            opacity: 0;
+            animation: tv-beam-on 1.6s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+        }
+
+        @keyframes tv-screen-on {
+            0% {
+                background: #000000;
+                opacity: 1;
+            }
+            30% {
+                background: #000000;
+                opacity: 1;
+            }
+            /* TV screen flash open */
+            35% {
+                background: #ffffff;
+                opacity: 1;
+            }
+            40% {
+                background: #10b981;
+                filter: brightness(2) contrast(1.5);
+                opacity: 1;
+            }
+            60% {
+                background: rgba(16, 185, 129, 0.2);
+                opacity: 1;
+            }
+            100% {
+                background: transparent;
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        @keyframes tv-beam-on {
+            0% {
+                transform: translateY(-50%) scaleX(0) scaleY(1);
+                opacity: 0;
+            }
+            5% {
+                transform: translateY(-50%) scaleX(0.01) scaleY(1);
+                opacity: 1;
+            }
+            /* The horizontal beam shoots across */
+            25% {
+                transform: translateY(-50%) scaleX(1) scaleY(1);
+                opacity: 1;
+            }
+            /* The beam pops open vertically */
+            30% {
+                transform: translateY(-50%) scaleX(1) scaleY(12);
+                opacity: 1;
+                background: #ffffff;
+            }
+            /* Fades and vanishes into the main screen flash */
+            35% {
+                transform: translateY(-50%) scaleX(1) scaleY(30);
+                opacity: 0.8;
+            }
+            40% {
+                transform: translateY(-50%) scaleX(1) scaleY(0);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(-50%) scaleX(1) scaleY(0);
+                opacity: 0;
+            }
+        }
+
         @keyframes tv-static-noise {
             0% { transform: translate(0,0) scale(1); }
             10% { transform: translate(-1%, -1%) scale(1.1); }
@@ -225,8 +317,8 @@
                         <img src="{{ asset('images/abikun.png') }}" alt="Logo" class="tv-logo w-full h-full object-cover">
                         <div class="tv-static-overlay"></div>
                         <div class="tv-scanlines"></div>
+                        <div class="tv-turn-on-overlay"></div>
                     </div>
-                </div>
                 </div>
                 <h1 class="text-2xl font-extrabold text-white tracking-tight uppercase">Kas <span class="text-emerald-400">RT</span></h1>
                 <p class="text-emerald-200/40 text-[8px] font-bold uppercase tracking-[0.4em] mt-1 italic">Financial Elite</p>
