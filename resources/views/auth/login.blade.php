@@ -90,7 +90,8 @@
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
-            animation: neon-logo-flicker 8s infinite linear;
+            animation: neon-logo-flicker 8s infinite linear,
+                       neon-logo-glitch 6s infinite linear;
         }
 
         @keyframes neon-logo-flicker {
@@ -207,6 +208,31 @@
             92.7%, 100% {
                 opacity: 1;
                 filter: brightness(1);
+            }
+        }
+
+        @keyframes neon-logo-glitch {
+            /* 0% - 85%: Stable normal and fully resolved */
+            0%, 85%, 89%, 93%, 97%, 100% {
+                transform: translate(0, 0) skew(0deg) scale(1);
+                filter: hue-rotate(0deg) saturate(1) contrast(1) invert(0);
+            }
+            /* Visual Jitters / Electrode Sparks */
+            87% {
+                transform: translate(-2px, 1px) skew(-2deg) scale(1.03);
+                filter: hue-rotate(60deg) saturate(1.8) contrast(1.5) invert(0.05);
+            }
+            91% {
+                transform: translate(2px, -1px) skew(3deg) scale(0.97);
+                filter: hue-rotate(-60deg) saturate(2) contrast(1.8) invert(0.1);
+            }
+            95% {
+                transform: translate(-1px, -1.5px) skew(-1.5deg) scale(1.02);
+                filter: hue-rotate(30deg) saturate(1.4) contrast(1.2);
+            }
+            99% {
+                transform: translate(1.5px, 1.5px) skew(2.5deg) scale(0.98);
+                filter: hue-rotate(180deg) saturate(2.5) contrast(2) invert(0.8);
             }
         }
 
