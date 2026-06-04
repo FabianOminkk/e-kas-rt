@@ -845,6 +845,12 @@
             // Trigger theme update on load
             const currentTheme = localStorage.getItem('theme') || 'dark';
             updateChartsForTheme(currentTheme);
+
+            // Automatically open add modal if requested in URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('add') === 'true') {
+                toggleModal();
+            }
         });
 
         // ================= MODAL WARGA LOGIC =================

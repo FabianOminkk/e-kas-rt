@@ -8,6 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #022c22; }
 
@@ -377,7 +378,7 @@
                 <p class="text-emerald-200/40 text-[8px] font-bold uppercase tracking-[0.4em] mt-1 italic">Financial Elite</p>
             </div>
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-5">
+            <form method="POST" action="{{ route('login') }}" class="space-y-5" onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='VERIFYING...';">
                 @csrf
                 <div class="space-y-1.5">
                     <label class="text-[9px] font-black text-emerald-400/70 uppercase tracking-widest px-1">Masukkan Email</label>
@@ -415,5 +416,35 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: '<span class="text-white font-black uppercase italic">BERHASIL!</span>',
+                    text: {!! json_encode(session('success')) !!},
+                    background: '#022c22',
+                    confirmButtonColor: '#10b981',
+                    customClass: {
+                        popup: 'border border-emerald-500/30 rounded-3xl',
+                        confirmButton: 'rounded-xl font-black uppercase text-[10px] px-8 py-3 text-[#022c22]'
+                    }
+                });
+            @endif
+            @if($errors->any() && !session('success'))
+                Swal.fire({
+                    icon: 'error',
+                    title: '<span class="text-white font-black uppercase italic">GAGAL!</span>',
+                    text: {!! json_encode($errors->first()) !!},
+                    background: '#022c22',
+                    confirmButtonColor: '#ef4444',
+                    customClass: {
+                        popup: 'border border-red-500/30 rounded-3xl',
+                        confirmButton: 'rounded-xl font-black uppercase text-[10px] px-8 py-3'
+                    }
+                });
+            @endif
+        });
+    </script>
 </body>
 </html>

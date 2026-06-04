@@ -24,7 +24,7 @@
             <p class="text-[10px] text-emerald-500/60 font-bold uppercase tracking-[0.3em] mt-2">Registrasi Warga Baru</p>
         </div>
 
-        <form action="{{ route('register') }}" method="POST" class="space-y-4">
+        <form action="{{ route('register') }}" method="POST" class="space-y-4" onsubmit="this.querySelector('button[type=submit]').disabled=true; this.querySelector('button[type=submit]').innerText='REGISTERING...';">
             @csrf
             
             <div>

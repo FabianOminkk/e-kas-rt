@@ -21,28 +21,36 @@ class RegisteredUserController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
-{
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
-        'alamat' => ['required', 'string'],
-        'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
+            'alamat' => ['required', 'string'],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+            'tanggal_lahir' => ['required', 'date'],
+            'no_telp' => ['required', 'numeric'],
+            'jenis_kelamin' => ['required', 'string'],
+            'agama' => ['nullable', 'string'],
+        ]);
 
-    // 1. Simpan data warga ke database
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'alamat' => $request->alamat,
-        'password' => \Illuminate\Support\Facades\Hash::make($request->password),
-        'role' => 'warga', 
-    ]);
+        // 1. Simpan data warga ke database
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'alamat' => $validated['alamat'],
+            'password' => \Illuminate\Support\Facades\Hash::make($validated['password']),
+            'role' => 'warga', 
+            'tanggal_lahir' => $validated['tanggal_lahir'],
+            'no_telp' => $validated['no_telp'],
+            'jenis_kelamin' => $validated['jenis_kelamin'] === 'L' ? 'Laki-laki' : ($validated['jenis_kelamin'] === 'P' ? 'Perempuan' : $validated['jenis_kelamin']),
+            'agama' => $validated['agama'] ?? '-',
+        ]);
 
-    event(new \Illuminate\Auth\Events\Registered($user));
+        event(new \Illuminate\Auth\Events\Registered($user));
 
-    // 2. JANGAN LOGIN OTOMATIS (Hapus baris Auth::login)
-    
-    // 3. Langsung arahkan kembali ke Login dengan pesan notifikasi
-    return redirect()->route('login')->with('success', 'Registrasi berhasil! Silahkan login dengan akun Anda.');
-}
+        // 2. JANGAN LOGIN OTOMATIS (Hapus baris Auth::login)
+        
+        // 3. Langsung arahkan kembali ke Login dengan pesan notifikasi
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silahkan login dengan akun Anda.');
+    }
 }

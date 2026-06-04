@@ -285,9 +285,9 @@
                             <button onclick="bukaModalPengeluaran()" class="px-5 py-3 bg-red-500 text-white text-xs font-black uppercase rounded-xl shadow-lg hover:scale-105 hover:bg-red-600 transition-all flex items-center gap-2">
                                 <i class="fa-solid fa-plus"></i> Pengeluaran
                             </button>
-                            <button onclick="toggleModal()" class="px-5 py-3 bg-emerald-500 text-[#022c22] text-xs font-black uppercase rounded-xl shadow-lg hover:scale-105 transition-all flex items-center gap-2">
+                            <a href="{{ route('warga.index', ['add' => 'true']) }}" class="px-5 py-3 bg-emerald-500 text-[#022c22] text-xs font-black uppercase rounded-xl shadow-lg hover:scale-105 transition-all flex items-center gap-2">
                                 <i class="fa-solid fa-user-plus"></i> Warga
-                            </button>
+                            </a>
                         </div>
                     @endif
                 </div>
@@ -364,9 +364,9 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <p class="text-[9px] text-white/40 uppercase font-bold tracking-wider">Terdaftar Aktif</p>
-                            <button onclick="toggleModal()" class="text-[9px] font-black text-purple-400 hover:text-purple-300 transition-all uppercase flex items-center gap-1">
+                            <a href="{{ route('warga.index', ['add' => 'true']) }}" class="text-[9px] font-black text-purple-400 hover:text-purple-300 transition-all uppercase flex items-center gap-1">
                                 <i class="fa-solid fa-user-plus"></i> Tambah
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
