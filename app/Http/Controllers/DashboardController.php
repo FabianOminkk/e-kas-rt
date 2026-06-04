@@ -569,6 +569,11 @@ class DashboardController extends Controller
      */
     private function syncTotalWargaToGitHub()
     {
+        // Disable git sync entirely if running on Vercel (read-only and serverless)
+        if (env('VERCEL') || isset($_SERVER['VERCEL'])) {
+            return;
+        }
+
         try {
             $count = User::where('role', 'warga')->count();
             
@@ -598,7 +603,7 @@ class DashboardController extends Controller
             if (function_exists('exec')) {
                 pclose(popen("cd /d " . escapeshellarg($cwd) . " && " . $command, "r"));
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // Log error jika ada masalah, jangan memblokir UX utama
             logger()->error('Gagal melakukan sinkronisasi Git/GitHub: ' . $e->getMessage());
         }
