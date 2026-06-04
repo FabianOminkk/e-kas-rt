@@ -7,6 +7,7 @@
     <link class="rounded-full" rel="icon" type="image/png" href="{{ asset('images/abikun.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #022c22; }
 
