@@ -365,7 +365,7 @@ class DashboardController extends Controller
         $request->validate([
             'bulan' => 'required|integer',
             'nominal' => 'required|numeric',
-            'bukti_transfer' => 'required|file|image|max:2048', 
+            'bukti_transfer' => 'required|file|image|mimes:jpeg,png,jpg|max:2048', 
         ]);
 
         // Cegah warga membayar dua kali untuk bulan yang sama jika berstatus lunas atau menunggu
@@ -593,19 +593,9 @@ class DashboardController extends Controller
                 }
             }
 
-            // 2. Jalankan perintah git push di background secara asynchronous
-            $cwd = base_path();
-            $commitMessage = "Auto-update: Total warga is now " . $count;
-            
-            // Menggunakan start /B di Windows agar tidak memblokir respon HTTP
-            $command = 'git add README.md && git commit -m "' . $commitMessage . '" && start /B git push origin main';
-            
-            if (function_exists('exec')) {
-                pclose(popen("cd /d " . escapeshellarg($cwd) . " && " . $command, "r"));
-            }
         } catch (\Throwable $e) {
             // Log error jika ada masalah, jangan memblokir UX utama
-            logger()->error('Gagal melakukan sinkronisasi Git/GitHub: ' . $e->getMessage());
+            logger()->error('Gagal memperbarui README lokal: ' . $e->getMessage());
         }
     }
 }

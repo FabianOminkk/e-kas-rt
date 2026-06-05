@@ -28,8 +28,8 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            // Password diset ke 'warga123' biar gampang testing
-            'password' => static::$password ??= Hash::make('warga123'),
+            // Password diset ke 'warga123' biar gampang testing, tapi pakai 'password' jika sedang unit test
+            'password' => static::$password ??= Hash::make(app()->runningUnitTests() ? 'password' : 'warga123'),
             'remember_token' => Str::random(10),
             
             // --- DATA TAMBAHAN WARGA KAS RT ---
