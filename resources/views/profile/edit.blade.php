@@ -259,7 +259,7 @@
                     
                     {{-- AREA FOTO SIDEBAR (SUDAH DIPERBAIKI) --}}
                     @if(auth()->user()->foto_profil)
-            <img src="{{ asset('profil/' . auth()->user()->foto_profil) }}" alt="Avatar" class="min-w-[40px] w-10 h-10 rounded-full object-cover border-2 border-emerald-500/50 shadow-lg">
+            <img src="{{ str_starts_with(auth()->user()->foto_profil, 'data:image') ? auth()->user()->foto_profil : asset('profil/' . auth()->user()->foto_profil) }}" alt="Avatar" class="min-w-[40px] w-10 h-10 rounded-full object-cover border-2 border-emerald-500/50 shadow-lg">
         @else
             <div class="min-w-[40px] h-10 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 font-black uppercase shadow-lg">
                 {{ substr(auth()->user()->name, 0, 1) }}
@@ -310,7 +310,7 @@
                         {{-- AREA FOTO PROFIL (SUDAH DIPERBAIKI) --}}
                         <div class="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/10 rounded-2xl mb-6">
                             <div class="relative w-32 h-32 mb-4 group">
-                                <img id="preview-img" src="{{ $user->foto_profil ? asset('profil/' . $user->foto_profil) : '' }}" 
+                                <img id="preview-img" src="{{ $user->foto_profil ? (str_starts_with($user->foto_profil, 'data:image') ? $user->foto_profil : asset('profil/' . $user->foto_profil)) : '' }}" 
                                      alt="Foto Profil" 
                                      class="{{ $user->foto_profil ? '' : 'hidden' }} w-full h-full object-cover rounded-full border-4 border-emerald-500/50 shadow-lg transition-all group-hover:border-emerald-400">
                                 

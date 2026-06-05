@@ -246,7 +246,7 @@
             <div class="mt-auto pt-6 border-t border-white/5 overflow-hidden">
                 <div class="flex items-center gap-4 mb-6 px-1">
                     @if(auth()->user()->foto_profil)
-                        <img src="{{ asset('profil/' . auth()->user()->foto_profil) }}" alt="Avatar" class="min-w-[40px] w-10 h-10 rounded-full object-cover border-2 border-emerald-500/50 shadow-lg">
+                        <img src="{{ str_starts_with(auth()->user()->foto_profil, 'data:image') ? auth()->user()->foto_profil : asset('profil/' . auth()->user()->foto_profil) }}" alt="Avatar" class="min-w-[40px] w-10 h-10 rounded-full object-cover border-2 border-emerald-500/50 shadow-lg">
                     @else
                         <div class="min-w-[40px] h-10 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 font-black uppercase shadow-lg">
                             {{ substr(auth()->user()->name, 0, 1) }}

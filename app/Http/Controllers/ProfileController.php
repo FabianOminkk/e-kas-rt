@@ -36,30 +36,15 @@ class ProfileController extends Controller
             'foto_profil_base64' => ['nullable', 'string'], 
         ]);
 
-        // ================= JURUS ANTI SYMLINK ERROR =================
+        // ================= JURUS BASE64 DB SAVING =================
         if ($request->filled('foto_profil_base64')) {
-            $image_parts = explode(";base64,", $request->foto_profil_base64);
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = time() . '_profil.jpg';
-
-            // Simpan langsung ke folder 'public/profil' di direktori projekmu
-            $destinationPath = public_path('profil');
-
-            // Bikin foldernya otomatis kalau belum ada
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
+            // Hapus file foto lama di local storage jika bukan base64 (opsional & aman)
+            if ($user->foto_profil && !str_starts_with($user->foto_profil, 'data:image') && file_exists(public_path('profil/' . $user->foto_profil))) {
+                @unlink(public_path('profil/' . $user->foto_profil));
             }
-
-            // Hapus foto lama JIKA ada
-            if ($user->foto_profil && file_exists(public_path('profil/' . $user->foto_profil))) {
-                unlink(public_path('profil/' . $user->foto_profil));
-            }
-
-            // Simpan file foto baru
-            file_put_contents($destinationPath . '/' . $fileName, $image_base64);
             
-            // Simpan nama file ke database
-            $user->foto_profil = $fileName;
+            // Simpan langsung string base64 ke database
+            $user->foto_profil = $request->foto_profil_base64;
         }
         // ==========================================================
 
@@ -93,9 +78,9 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        // Hapus foto profil sebelum akun dihapus
-        if ($user->foto_profil && file_exists(public_path('profil/' . $user->foto_profil))) {
-            unlink(public_path('profil/' . $user->foto_profil));
+        // Hapus foto profil sebelum akun dihapus jika bukan base64
+        if ($user->foto_profil && !str_starts_with($user->foto_profil, 'data:image') && file_exists(public_path('profil/' . $user->foto_profil))) {
+            @unlink(public_path('profil/' . $user->foto_profil));
         }
 
         Auth::logout();
