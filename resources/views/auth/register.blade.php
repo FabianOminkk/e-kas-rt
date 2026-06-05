@@ -59,8 +59,23 @@
                 </div>
                 <div>
                     <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-2 block px-1">Agama</label>
-                    <input type="text" name="agama" value="{{ old('agama') }}" class="input-field w-full px-5 py-3 rounded-2xl text-sm outline-none" placeholder="Islam, dll">
+                    <select id="agama_select" required class="input-field w-full px-5 py-3 rounded-2xl text-sm outline-none">
+                        <option value="" disabled {{ !old('agama') ? 'selected' : '' }}>Pilih Agama</option>
+                        <option value="Islam" {{ old('agama') == 'Islam' ? 'selected' : '' }}>Islam</option>
+                        <option value="Kristen" {{ old('agama') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                        <option value="Katolik" {{ old('agama') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                        <option value="Hindu" {{ old('agama') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                        <option value="Buddha" {{ old('agama') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                        <option value="Konghucu" {{ old('agama') == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                        <option value="dll" {{ (old('agama') && !in_array(old('agama'), ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])) ? 'selected' : '' }}>Lainnya (dll)</option>
+                    </select>
+                    <input type="hidden" name="agama" id="agama_hidden" value="{{ old('agama') }}">
                 </div>
+            </div>
+
+            <div id="agama_lainnya_wrapper" class="{{ (old('agama') && !in_array(old('agama'), ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])) ? '' : 'hidden' }}">
+                <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-2 block px-1">Agama Lainnya</label>
+                <input type="text" id="agama_lainnya" class="input-field w-full px-5 py-3 rounded-2xl text-sm outline-none" placeholder="Masukkan Agama Anda" value="{{ (old('agama') && !in_array(old('agama'), ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])) ? old('agama') : '' }}">
             </div>
 
             <div>
@@ -92,8 +107,33 @@
         </div>
     </div>
 
-    {{-- SCRIPT ERROR HANDLING --}}
+    {{-- SCRIPT ERROR HANDLING & AGAMA LOGIC --}}
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const agamaSelect = document.getElementById('agama_select');
+            const agamaLainnyaWrapper = document.getElementById('agama_lainnya_wrapper');
+            const agamaLainnya = document.getElementById('agama_lainnya');
+            const agamaHidden = document.getElementById('agama_hidden');
+
+            function updateAgama() {
+                if (agamaSelect.value === 'dll') {
+                    agamaLainnyaWrapper.classList.remove('hidden');
+                    agamaLainnya.required = true;
+                    agamaHidden.value = agamaLainnya.value;
+                } else {
+                    agamaLainnyaWrapper.classList.add('hidden');
+                    agamaLainnya.required = false;
+                    agamaHidden.value = agamaSelect.value;
+                }
+            }
+
+            agamaSelect.addEventListener('change', updateAgama);
+            agamaLainnya.addEventListener('input', updateAgama);
+            
+            // Set initial state
+            updateAgama();
+        });
+
         @if($errors->any())
             Swal.fire({
                 icon: 'error',

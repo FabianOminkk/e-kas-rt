@@ -370,8 +370,20 @@
                             </div>
                             <div>
                                 <label class="text-[10px] font-black text-emerald-500 uppercase tracking-widest block mb-2"><i class="fa-solid fa-hands-praying mr-1"></i> Agama</label>
-                                <input type="text" name="agama" value="{{ old('agama', $user->agama) }}" 
-                                       class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 transition-all text-white">
+                                <select id="profile_agama_select" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 transition-all text-white">
+                                    <option value="" disabled>Pilih Agama</option>
+                                    <option value="Islam" {{ old('agama', $user->agama) == 'Islam' ? 'selected' : '' }}>Islam</option>
+                                    <option value="Kristen" {{ old('agama', $user->agama) == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                                    <option value="Katolik" {{ old('agama', $user->agama) == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                                    <option value="Hindu" {{ old('agama', $user->agama) == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                                    <option value="Buddha" {{ old('agama', $user->agama) == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                                    <option value="Konghucu" {{ old('agama', $user->agama) == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                                    <option value="dll" {{ (old('agama', $user->agama) && !in_array(old('agama', $user->agama), ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])) ? 'selected' : '' }}>Lainnya (dll)</option>
+                                </select>
+                                <div id="profile_agama_lainnya_wrapper" class="{{ (old('agama', $user->agama) && !in_array(old('agama', $user->agama), ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])) ? '' : 'hidden' }} mt-2">
+                                    <input type="text" id="profile_agama_lainnya" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 transition-all text-white" placeholder="Masukkan Agama Lainnya" value="{{ (old('agama', $user->agama) && !in_array(old('agama', $user->agama), ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'])) ? old('agama', $user->agama) : '' }}">
+                                </div>
+                                <input type="hidden" name="agama" id="profile_warga_agama" value="{{ old('agama', $user->agama) }}">
                             </div>
                             <div>
                                 <label class="text-[10px] font-black text-emerald-500 uppercase tracking-widest block mb-2"><i class="fa-solid fa-house-user mr-1"></i> Status Tinggal</label>
@@ -474,6 +486,46 @@
                     icon: 'error', title: '<span class="text-white font-black uppercase italic">GAGAL!</span>', html: errorHtml, background: '#020617', confirmButtonColor: '#ef4444', customClass: { popup: 'glass-card border border-red-500/30 rounded-3xl', confirmButton: 'rounded-xl font-black uppercase text-[10px] px-8 py-3' } 
                 });
             @endif
+
+            // Profile Agama Logic
+            const profileAgamaSelect = document.getElementById('profile_agama_select');
+            const profileAgamaLainnyaWrapper = document.getElementById('profile_agama_lainnya_wrapper');
+            const profileAgamaLainnya = document.getElementById('profile_agama_lainnya');
+            const profileAgamaHidden = document.getElementById('profile_warga_agama');
+
+            function updateProfileAgama() {
+                if (profileAgamaSelect.value === 'dll') {
+                    profileAgamaLainnyaWrapper.classList.remove('hidden');
+                    profileAgamaLainnya.required = true;
+                    profileAgamaHidden.value = profileAgamaLainnya.value;
+                } else {
+                    profileAgamaLainnyaWrapper.classList.add('hidden');
+                    profileAgamaLainnya.required = false;
+                    profileAgamaHidden.value = profileAgamaSelect.value;
+                }
+            }
+
+            if (profileAgamaSelect) {
+                profileAgamaSelect.addEventListener('change', updateProfileAgama);
+                profileAgamaLainnya.addEventListener('input', updateProfileAgama);
+                
+                // Initialize state from existing value
+                const initialVal = profileAgamaHidden.value || '';
+                const standardReligions = ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'];
+                const matched = standardReligions.find(r => r.toLowerCase() === initialVal.trim().toLowerCase());
+                if (matched) {
+                    profileAgamaSelect.value = matched;
+                    profileAgamaLainnyaWrapper.classList.add('hidden');
+                } else if (initialVal.trim()) {
+                    profileAgamaSelect.value = 'dll';
+                    profileAgamaLainnyaWrapper.classList.remove('hidden');
+                    profileAgamaLainnya.value = initialVal;
+                } else {
+                    profileAgamaSelect.value = '';
+                    profileAgamaLainnyaWrapper.classList.add('hidden');
+                }
+                updateProfileAgama();
+            }
         });
 
         // ================= CROPPER JS LOGIC =================

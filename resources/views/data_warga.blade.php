@@ -657,7 +657,20 @@
                     </div>
                     <div>
                         <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Agama</label>
-                        <input type="text" name="agama" class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="Contoh: Islam">
+                        <select id="tambah_agama_select" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
+                            <option value="" disabled selected>Pilih Agama</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Kristen">Kristen</option>
+                            <option value="Katolik">Katolik</option>
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Konghucu">Konghucu</option>
+                            <option value="dll">Lainnya (dll)</option>
+                        </select>
+                        <div id="tambah_agama_lainnya_wrapper" class="hidden mt-2">
+                            <input type="text" id="tambah_agama_lainnya" class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="Masukkan Agama Lainnya">
+                        </div>
+                        <input type="hidden" name="agama" id="tambah_warga_agama">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -746,7 +759,20 @@
                     </div>
                     <div>
                         <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Agama</label>
-                        <input type="text" id="edit_warga_agama" name="agama" class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
+                        <select id="edit_agama_select" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
+                            <option value="" disabled>Pilih Agama</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Kristen">Kristen</option>
+                            <option value="Katolik">Katolik</option>
+                            <option value="Hindu">Hindu</option>
+                            <option value="Buddha">Buddha</option>
+                            <option value="Konghucu">Konghucu</option>
+                            <option value="dll">Lainnya (dll)</option>
+                        </select>
+                        <div id="edit_agama_lainnya_wrapper" class="hidden mt-2">
+                            <input type="text" id="edit_agama_lainnya" class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="Masukkan Agama Lainnya">
+                        </div>
+                        <input type="hidden" name="agama" id="edit_warga_agama">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -861,6 +887,52 @@
             if (urlParams.get('add') === 'true') {
                 toggleModal();
             }
+
+            // Tambah Warga Agama select logic
+            const tambahAgamaSelect = document.getElementById('tambah_agama_select');
+            const tambahAgamaLainnyaWrapper = document.getElementById('tambah_agama_lainnya_wrapper');
+            const tambahAgamaLainnya = document.getElementById('tambah_agama_lainnya');
+            const tambahAgamaHidden = document.getElementById('tambah_warga_agama');
+
+            function updateTambahAgama() {
+                if (tambahAgamaSelect.value === 'dll') {
+                    tambahAgamaLainnyaWrapper.classList.remove('hidden');
+                    tambahAgamaLainnya.required = true;
+                    tambahAgamaHidden.value = tambahAgamaLainnya.value;
+                } else {
+                    tambahAgamaLainnyaWrapper.classList.add('hidden');
+                    tambahAgamaLainnya.required = false;
+                    tambahAgamaHidden.value = tambahAgamaSelect.value;
+                }
+            }
+
+            if (tambahAgamaSelect) {
+                tambahAgamaSelect.addEventListener('change', updateTambahAgama);
+                tambahAgamaLainnya.addEventListener('input', updateTambahAgama);
+            }
+
+            // Edit Warga Agama select logic
+            const editAgamaSelect = document.getElementById('edit_agama_select');
+            const editAgamaLainnyaWrapper = document.getElementById('edit_agama_lainnya_wrapper');
+            const editAgamaLainnya = document.getElementById('edit_agama_lainnya');
+            const editAgamaHidden = document.getElementById('edit_warga_agama');
+
+            function updateEditAgama() {
+                if (editAgamaSelect.value === 'dll') {
+                    editAgamaLainnyaWrapper.classList.remove('hidden');
+                    editAgamaLainnya.required = true;
+                    editAgamaHidden.value = editAgamaLainnya.value;
+                } else {
+                    editAgamaLainnyaWrapper.classList.add('hidden');
+                    editAgamaLainnya.required = false;
+                    editAgamaHidden.value = editAgamaSelect.value;
+                }
+            }
+
+            if (editAgamaSelect) {
+                editAgamaSelect.addEventListener('change', updateEditAgama);
+                editAgamaLainnya.addEventListener('input', updateEditAgama);
+            }
         });
 
         // ================= MODAL WARGA LOGIC =================
@@ -882,7 +954,35 @@
             document.getElementById('edit_warga_no_telp').value = no_telp;
             document.getElementById('edit_warga_tanggal_lahir').value = tanggal_lahir;
             document.getElementById('edit_warga_jenis_kelamin').value = jenis_kelamin;
-            document.getElementById('edit_warga_agama').value = agama;
+            
+            // Set Agama dropdown & input values
+            const editAgamaHidden = document.getElementById('edit_warga_agama');
+            const editAgamaSelect = document.getElementById('edit_agama_select');
+            const editAgamaLainnyaWrapper = document.getElementById('edit_agama_lainnya_wrapper');
+            const editAgamaLainnya = document.getElementById('edit_agama_lainnya');
+
+            editAgamaHidden.value = agama;
+            const standardReligions = ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'];
+            const normalizedAgama = (agama || '').trim();
+            const matchedReligion = standardReligions.find(r => r.toLowerCase() === normalizedAgama.toLowerCase());
+
+            if (matchedReligion) {
+                editAgamaSelect.value = matchedReligion;
+                editAgamaLainnyaWrapper.classList.add('hidden');
+                editAgamaLainnya.value = '';
+                editAgamaLainnya.required = false;
+            } else if (normalizedAgama) {
+                editAgamaSelect.value = 'dll';
+                editAgamaLainnyaWrapper.classList.remove('hidden');
+                editAgamaLainnya.value = agama;
+                editAgamaLainnya.required = true;
+            } else {
+                editAgamaSelect.value = '';
+                editAgamaLainnyaWrapper.classList.add('hidden');
+                editAgamaLainnya.value = '';
+                editAgamaLainnya.required = false;
+            }
+
             document.getElementById('edit_warga_alamat').value = alamat;
             document.getElementById('edit_warga_tempat_lahir').value = tempat_lahir;
             document.getElementById('edit_warga_status_tinggal').value = status_tinggal;
