@@ -203,21 +203,40 @@
             </div>
 
             <nav class="flex-1 space-y-3">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-4 px-3 py-3 {{ request()->routeIs('dashboard') ? 'bg-emerald-500 text-[#022c22]' : 'text-emerald-200/50 hover:bg-white/5' }} rounded-xl transition-all">
                     <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-house"></i></div>
                     <span class="sidebar-text text-xs font-black uppercase tracking-widest">Dashboard</span>
                 </a>
                 
                 @if(auth()->user()->role == 'warga')
-                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
+                    <a href="{{ route('asset.index') }}" class="flex items-center gap-4 px-3 py-3 {{ request()->routeIs('asset.index') ? 'bg-emerald-500 text-[#022c22]' : 'text-emerald-200/50 hover:bg-white/5' }} rounded-xl transition-all">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Inventaris Aset</span>
+                    </a>
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-4 px-3 py-3 {{ request()->routeIs('profile.edit') ? 'bg-emerald-500 text-[#022c22]' : 'text-emerald-200/50 hover:bg-white/5' }} rounded-xl transition-all">
                         <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-user-gear"></i></div>
                         <span class="sidebar-text text-xs font-black uppercase tracking-widest">Ubah Profil</span>
                     </a>
-                    
-                    {{-- MENU DOMPET AKTIF --}}
-                    <a href="{{ route('dompet.index') }}" class="flex items-center gap-4 px-3 py-3 bg-emerald-500 text-[#022c22] rounded-xl shadow-lg transition-all">
+                    <a href="{{ route('dompet.index') }}" class="flex items-center gap-4 px-3 py-3 {{ request()->routeIs('dompet.index') ? 'bg-emerald-500 text-[#022c22]' : 'text-emerald-200/50 hover:bg-white/5' }} rounded-xl transition-all">
                         <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-wallet"></i></div>
                         <span class="sidebar-text text-xs font-black uppercase tracking-widest">Dompet Saya</span>
+                    </a>
+                @else
+                    <a href="{{ route('warga.index') }}" class="flex items-center gap-4 px-3 py-3 {{ request()->routeIs('warga.index') ? 'bg-emerald-500 text-[#022c22]' : 'text-emerald-200/50 hover:bg-white/5' }} rounded-xl transition-all">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-users"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Data Warga</span>
+                    </a>
+                    <a href="{{ route('asset.index') }}" class="flex items-center gap-4 px-3 py-3 {{ request()->routeIs('asset.index') ? 'bg-emerald-500 text-[#022c22]' : 'text-emerald-200/50 hover:bg-white/5' }} rounded-xl transition-all">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Inventaris Aset</span>
+                    </a>
+                    <a href="{{ route('dashboard') }}#mading-informasi" class="flex items-center gap-4 px-3 py-3 text-emerald-200/50 hover:bg-white/5 rounded-xl transition-all">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-bullhorn"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Announcement</span>
+                    </a>
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-4 px-3 py-3 {{ request()->routeIs('profile.edit') ? 'bg-emerald-500 text-[#022c22]' : 'text-emerald-200/50 hover:bg-white/5' }} rounded-xl transition-all">
+                        <div class="min-w-[24px] flex justify-center"><i class="fa-solid fa-user-gear"></i></div>
+                        <span class="sidebar-text text-xs font-black uppercase tracking-widest">Setting Profil</span>
                     </a>
                 @endif
             </nav>
