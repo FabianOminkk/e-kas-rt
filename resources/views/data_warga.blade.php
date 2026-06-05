@@ -625,7 +625,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Password</label>
-                        <input type="password" name="password" required class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
+                        <div class="relative">
+                            <input type="password" id="tambah_warga_password" name="password" required autocomplete="new-password" class="w-full bg-[#020617] border border-white/10 rounded-xl pl-4 pr-10 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white">
+                            <button type="button" onclick="togglePasswordVisibility('tambah_warga_password', 'tambah_warga_eye')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-white/40 hover:text-emerald-400">
+                                <i class="fa-solid fa-eye" id="tambah_warga_eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Nomor Telepon</label>
@@ -709,7 +714,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Password (Kosongkan jika tidak diubah)</label>
-                        <input type="password" name="password" class="w-full bg-[#020617] border border-white/10 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="******">
+                        <div class="relative">
+                            <input type="password" id="edit_warga_password" name="password" autocomplete="new-password" class="w-full bg-[#020617] border border-white/10 rounded-xl pl-4 pr-10 py-3 text-xs focus:outline-none focus:border-emerald-500 text-white" placeholder="******">
+                            <button type="button" onclick="togglePasswordVisibility('edit_warga_password', 'edit_warga_eye')" class="absolute inset-y-0 right-0 flex items-center pr-3 text-white/40 hover:text-emerald-400">
+                                <i class="fa-solid fa-eye" id="edit_warga_eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Nomor Telepon</label>
@@ -886,6 +896,33 @@
             if (modalEditWarga) {
                 modalEditWarga.classList.add('hidden');
                 modalEditWarga.classList.remove('flex');
+                
+                // Reset password input
+                const editPass = document.getElementById('edit_warga_password');
+                if (editPass) {
+                    editPass.value = '';
+                    editPass.type = 'password';
+                }
+                const editEye = document.getElementById('edit_warga_eye');
+                if (editEye) {
+                    editEye.className = 'fa-solid fa-eye';
+                }
+            }
+        }
+
+        function togglePasswordVisibility(inputId, eyeId) {
+            const input = document.getElementById(inputId);
+            const eye = document.getElementById(eyeId);
+            if (input && eye) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    eye.classList.remove('fa-eye');
+                    eye.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    eye.classList.remove('fa-eye-slash');
+                    eye.classList.add('fa-eye');
+                }
             }
         }
 
